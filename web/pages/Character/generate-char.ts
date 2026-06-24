@@ -1,6 +1,7 @@
 import { parseTemplate } from '/common/template-parser'
 import { AppSchema } from '/common/types'
 import { neat } from '/common/util'
+import { getPresetConnection } from '/common/providers'
 import { getUserPreset } from '/web/shared/adapter'
 import { presetStore, toastStore, userStore } from '/web/store'
 import { genApi } from '/web/store/data/inference'
@@ -114,12 +115,13 @@ export async function generateField(opts: {
 
   const { user } = userStore.getState()
 
-  const settings =
+  const rawSettings =
     getUserPreset(user?.chargenPreset || user?.defaultPreset) || presetStore.getState().presets[0]
-  if (!settings) {
+  if (!rawSettings) {
     toastStore.error(`Cannot generate character field: No generation preset configured`)
     return
   }
+  const settings = getPresetConnection(rawSettings, user?.providers).preset
 
   const { blocks, ...parsed } = await parseTemplate(prompt, { settings })
 
