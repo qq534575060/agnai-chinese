@@ -94,6 +94,10 @@ export async function createMessage(opts: {
 
   localEmit({ type: 'message-created', msg: preMsg, chatId: opts.chatId })
 
+  if (!isLoggedIn()) {
+    return localApi.result({ message: preMsg })
+  }
+
   const result = await api.post(`/chat/${opts.chatId}/send`, {
     kind: opts.kind,
     text: text.parsed,
