@@ -265,7 +265,7 @@ export async function getAllChats(shallow?: boolean) {
       useOverrides: false,
     })
 
-    chat.genPreset = presets[0]?._id
+    chat.genPreset = presets[0]?._id || 'llama_cpp'
 
     await localApi.saveChats([chat])
 
