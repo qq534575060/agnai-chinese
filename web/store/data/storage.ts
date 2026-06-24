@@ -131,22 +131,15 @@ export async function handleGuestInit() {
       !res.result.trees ||
       !res.result.templates
     ) {
-      const entities = await migrateToJson()
-      entities.user._id = 'anon'
-      await api.post('/json', entities)
+      const localEntities = await getGuestInitEntities()
+      const entities = mergeJsonState(res.result, localEntities)
+      await migrateToJson(entities)
+      hydrateJsonState(entities)
       return localApi.result({ ...entities, config: cfg.result! })
     }
 
     if (res.result) {
-      res.result.user._id = 'anon'
-      localStore.set('config', res.result.user)
-      localStore.set('profile', res.result.profile)
-      localStore.set('presets', res.result.presets)
-      localStore.set('memory', res.result.books)
-      localStore.set('scenario', res.result.scenario)
-      localStore.set('characters', res.result.characters)
-      localStore.set('chats', res.result.chats)
-      localStore.set('templates', res.result.templates)
+      hydrateJsonState(res.result)
       return res
     }
   }
@@ -158,8 +151,8 @@ export async function handleGuestInit() {
   })
 }
 
-async function migrateToJson() {
-  const entities = await getGuestInitEntities()
+async function migrateToJson(state?: JsonState) {
+  const entities = state || (await getGuestInitEntities())
 
   await api.post('/json', entities)
 
@@ -173,6 +166,42 @@ async function migrateToJson() {
 
 type GuestEntities = Awaited<ReturnType<typeof getGuestInitEntities>> & {
   messages: AppSchema.ChatMessage[]
+}
+
+type JsonState = Awaited<ReturnType<typeof getGuestInitEntities>> & {
+  trees: unknown[]
+}
+
+function mergeJsonState(
+  remote: Partial<JsonState> | undefined,
+  local: Awaited<ReturnType<typeof getGuestInitEntities>>
+) {
+  const user = remote?.user || local.user
+  user._id = ID
+
+  return {
+    user,
+    profile: remote?.profile || local.profile,
+    presets: remote?.presets || local.presets,
+    books: remote?.books || local.books,
+    scenario: remote?.scenario || local.scenario,
+    characters: remote?.characters || local.characters,
+    chats: remote?.chats || local.chats,
+    trees: remote?.trees || [],
+    templates: remote?.templates || local.templates,
+  }
+}
+
+function hydrateJsonState(state: JsonState) {
+  state.user._id = ID
+  localStore.set('config', state.user)
+  localStore.set('profile', state.profile)
+  localStore.set('presets', state.presets)
+  localStore.set('memory', state.books)
+  localStore.set('scenario', state.scenario)
+  localStore.set('characters', state.characters)
+  localStore.set('chats', state.chats)
+  localStore.set('templates', state.templates)
 }
 
 async function getGuestInitEntities(config?: AppSchema.AppConfig) {
