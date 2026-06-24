@@ -118,25 +118,62 @@ export async function toChatMessages(req: GenerateRequestV2, counter: TokenCount
   //   })
   // }
 
-  const ensureLastRoleIsUser = req.settings?.postUserRole || req.subscription?.preset?.postUserRole
+  const strictTemplateRoles = usesStrictAlternatingTemplate(req)
+  const ensureLastRoleIsUser =
+    strictTemplateRoles || req.settings?.postUserRole || req.subscription?.preset?.postUserRole
   const role = ensureLastRoleIsUser ? 'user' : 'assistant'
   if (postContent || prefill) {
     messages.push({ role, content: `${postContent}${prefill}` })
   }
 
-  if (req.settings?.skipRoleMerging) {
+  if (req.settings?.skipRoleMerging && !strictTemplateRoles) {
     return { messages, assembled }
   }
 
-  const mergedMsgs = ensureMessagesAlternate(messages)
-  const mergedBlocks = ensureMessagesAlternate(assembled.blocks)
+  const mergeOpts = strictTemplateRoles ? { userFirst: true, userLast: true } : undefined
+  const mergedMsgs = ensureMessagesAlternate(messages, mergeOpts)
+  const mergedBlocks = ensureMessagesAlternate(assembled.blocks, mergeOpts)
   return {
-    messages: mergedMsgs,
+    messages: strictTemplateRoles ? foldSystemIntoFirstUser(mergedMsgs) : mergedMsgs,
     assembled: {
       ...assembled,
-      blocks: mergedBlocks,
+      blocks: strictTemplateRoles ? foldSystemIntoFirstUser(mergedBlocks) : mergedBlocks,
     },
   }
+}
+
+function usesStrictAlternatingTemplate(req: GenerateRequestV2) {
+  const settings = req.settings
+  const model = settings?.thirdPartyModel || ''
+
+  if (!settings?.localRequests) return false
+  if (settings.thirdPartyFormat !== 'openai-chatv2') return false
+
+  return /(^|[\/:_-])(gemma|mistral|ministral|mixtral)([\/:_-]|$)/i.test(model)
+}
+
+function foldSystemIntoFirstUser(messages: CompletionItem[]): CompletionItem[] {
+  const systems = messages.filter((msg) => msg.role === 'system')
+  if (!systems.length) return messages
+
+  const withoutSystems = messages.filter((msg) => msg.role !== 'system')
+  const systemContent = mergeCompletionItems(systems)
+  const firstUserIndex = withoutSystems.findIndex((msg) => msg.role === 'user')
+
+  if (firstUserIndex === -1) {
+    return [{ role: 'user', content: systemContent as any }, ...withoutSystems]
+  }
+
+  const firstUser = withoutSystems[firstUserIndex]
+  withoutSystems[firstUserIndex] = {
+    ...firstUser,
+    content: mergeCompletionItems([
+      { role: 'user', content: systemContent as any },
+      firstUser,
+    ]) as any,
+  }
+
+  return withoutSystems
 }
 
 function getAttachments(req: Pick<GenerateRequestV2, 'attachments'>, id: string | undefined) {
