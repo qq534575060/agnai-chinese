@@ -128,7 +128,6 @@ export async function generateField(opts: {
   genApi.inferenceStream(
     {
       prompt: parsed.blockPrompt,
-      messages: blocks,
       overrides: { stopSequences: ['[/INST]', '###', '<|', '</s>'] },
       settings,
     },
