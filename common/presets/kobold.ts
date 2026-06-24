@@ -3,7 +3,9 @@ import { AppSchema } from '../types/schema'
 const localDefault = {
   service: 'kobold',
   thirdPartyFormat: 'openai-chatv2',
-  localRequests: true,
+  thirdPartyModel: 'local-model',
+  oaiModel: 'local-model',
+  localRequests: false,
   useMaxContext: false,
   presetMode: 'advanced',
   maxTokens: 500,
@@ -33,7 +35,7 @@ export const koboldPresets = {
   llama_cpp: {
     ...localDefault,
     name: 'Local Llama.cpp',
-    thirdPartyUrl: 'http://localhost:8080/v1',
+    thirdPartyUrl: 'http://127.0.0.1:8080/v1',
   },
   kobold_cpp: {
     ...localDefault,

@@ -381,8 +381,10 @@ export async function inferenceStream(opts: InferenceOpts, onTick?: TickHandler)
       settings: preset,
       jsonSchema: opts.jsonSchema,
     })
+    const host = getOpenAICompatibleLocalHost(conn?.url || '')
+
     api.localSSE({
-      host: conn?.url,
+      host,
       path: payload.messages ? `/chat/completions` : '/completions',
       body: opts.payload || fallback,
       headers,
@@ -406,4 +408,10 @@ export async function inferenceStream(opts: InferenceOpts, onTick?: TickHandler)
   }
 
   return lazy.promise
+}
+
+function getOpenAICompatibleLocalHost(host: string) {
+  if (!host) return host
+  if (/\/v\d+\/?$/.test(host)) return host
+  return `${host.replace(/\/$/, '')}/v1`
 }

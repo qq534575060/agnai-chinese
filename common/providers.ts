@@ -125,7 +125,7 @@ export const KNOWN_SELF_HOST: Record<string, ProviderDefinition> = {
       { type: 'format', value: 'tabby', url: 'http://localhost:5000/v1' },
       { type: 'format', value: 'aphrodite', url: 'http://localhost:2242/v1' },
       { type: 'format', value: 'vllm', url: 'http://localhost:8000/v1' },
-      { type: 'format', value: 'llamacpp', url: 'http://localhost:8080/v1' },
+      { type: 'format', value: 'llamacpp', url: 'http://127.0.0.1:8080/v1' },
       { type: 'format', value: 'koboldcpp', url: 'http://localhost:5001/v1' },
       { type: 'format', value: 'ollama', url: 'http://localhost:11434/v1' },
       {
