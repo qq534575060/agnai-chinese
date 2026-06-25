@@ -29,6 +29,7 @@ import Slot from '/web/shared/Slot'
 import { adaptersToOptions } from '/common/adapters'
 import { useRef } from '/web/shared/hooks'
 import { canStartTour, startTour } from '/web/tours'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 const enum Sub {
   None,
@@ -39,7 +40,7 @@ const enum Sub {
 
 const HomePage: Component = () => {
   const [ref, onRef] = useRef()
-  setComponentPageTitle('Information')
+  setComponentPageTitle(t('Information'))
   const [sub, setSub] = createSignal(Sub.None)
 
   const closeSub = () => setSub(Sub.None)
@@ -105,7 +106,7 @@ const HomePage: Component = () => {
             glow="hl-500"
             class="flex w-full items-center"
             ariaRole="region"
-            ariaLabel="Models"
+            ariaLabel={t('Models')}
           >
             Agnaistic now hosts its own models! Get started for free by using the{' '}
             <span class="font-bold">&nbsp;Agnaistic&nbsp;</span> service in your presets
@@ -119,21 +120,21 @@ const HomePage: Component = () => {
         </Show>
 
         <div class="home-cards">
-          <TitleCard type="bg" title="Guides" class="" center ariaRole="region" ariaLabel="Guides">
+          <TitleCard type="bg" title={t('Guides')} class="" center ariaRole="region" ariaLabel={t('Guides')}>
             <div class="flex flex-wrap justify-center gap-2">
               <a href="https://agnai.guide" target="_blank">
                 <Pill type="hl" inverse ariaRole="link" class="cursor-pointer">
-                  Official Guides
+                  {t('Official Guides')}
                 </Pill>
               </a>
 
               <A href="/guides/memory">
-                <Pill inverse>Memory Book</Pill>
+                <Pill inverse>{t('Memory Book')}</Pill>
               </A>
             </div>
           </TitleCard>
 
-          <TitleCard type="bg" title="Links" center ariaRole="region" ariaLabel="Links">
+          <TitleCard type="bg" title={t('Links')} center ariaRole="region" ariaLabel={t('Links')}>
             <div class="flex flex-wrap justify-center gap-2">
               <a href="https://discord.agnai.chat" target="_blank">
                 <Pill inverse>Agnaistic Discord</Pill>
@@ -158,9 +159,9 @@ const HomePage: Component = () => {
           <Features />
         </Show>
 
-        <Card border ariaRole="region" ariaLabel="Getting started">
+        <Card border ariaRole="region" ariaLabel={t('Getting Started')}>
           <div class="mb-2 flex justify-center text-xl font-bold" aria-hidden="true">
-            Getting Started
+            {t('Getting Started')}
           </div>
           <div class="flex flex-col items-center gap-2 leading-6">
             <p>
@@ -215,7 +216,7 @@ const RecentChats: Component<{ emitter: ComponentEventEmitter<'loaded'> }> = (pr
   return (
     <section class="flex flex-col" aria-labelledby="homeRecConversations">
       <div id="homeRecConversations" class="text-lg font-bold" aria-hidden="true">
-        Recent Conversations
+        {t('Recent Conversations')}
       </div>
       <div
         class="grid w-full grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-4"
@@ -307,23 +308,23 @@ const RecentChats: Component<{ emitter: ComponentEventEmitter<'loaded'> }> = (pr
           )}
         </For>
         <Show when={state.last.length < 4}>
-          <BorderCard href="/chats/create" ariaLabel="Start conversation">
-            <div aria-hidden="true">Start Conversation</div>
+          <BorderCard href="/chats/create" ariaLabel={t('Start conversation')}>
+            <div aria-hidden="true">{t('Start Conversation')}</div>
             <Plus size={20} aria-hidden="true" />
           </BorderCard>
         </Show>
 
         <Show when={state.last.length < 3}>
-          <BorderCard href="/editor" ariaLabel="Create a character">
-            <div aria-hidden="true">Create a Character</div>
+          <BorderCard href="/editor" ariaLabel={t('Create a character')}>
+            <div aria-hidden="true">{t('Create a Character')}</div>
             <WizardIcon size={20} aria-hidden="true" />
           </BorderCard>
         </Show>
 
         <Show when={state.last.length < 2}>
-          <BorderCard href="/settings" ariaLabel="Configure your AI services">
+          <BorderCard href="/settings" ariaLabel={t('Configure your AI Services')}>
             <div class="flex w-full items-center justify-center text-center" aria-hidden="true">
-              Configure your AI Services
+              {t('Configure your AI Services')}
             </div>
             <Settings size={20} aria-hidden="true" />
           </BorderCard>
@@ -376,7 +377,7 @@ const Features: Component = () => (
   <Card border>
     <section aria-labelledby="homeNotableFeats">
       <div id="homeNotableFeats" class="flex justify-center text-xl font-bold" aria-hidden="true">
-        Notable Features
+        {t('Notable Features')}
       </div>
       <div class="flex flex-col gap-2 leading-6">
         <p>
@@ -409,16 +410,16 @@ const Features: Component = () => (
 )
 
 const HordeGuide: Component<{ close: () => void }> = (props) => (
-  <Modal show close={props.close} title="Horde Guide" maxWidth="half" ariaLabel="Horde guide">
+  <Modal show close={props.close} title={t('Horde Guide')} maxWidth="half" ariaLabel={t('Horde guide')}>
     <div class="flex flex-col gap-2">
       <SolidCard bg="hl-900">
-        <b>Important!</b> For reliable responses, ensure you have registered at{' '}
+        <b>{t('Important')}!</b> For reliable responses, ensure you have registered at{' '}
         <a href="https://aihorde.net/register" class="link" target="_blank">
           AI Horde
         </a>
         . Once you have your key, add it to your{' '}
         <A href="/settings?tab=ai&service=horde" class="link">
-          Horde Settings
+          {t('Horde Settings')}
         </A>
         .
       </SolidCard>
@@ -442,7 +443,7 @@ const HordeGuide: Component<{ close: () => void }> = (props) => (
 )
 
 const OpenAIGuide: Component<{ close: () => void }> = (props) => (
-  <Modal show close={props.close} title="OpenAI Guide" maxWidth="half" ariaLabel="OpenAI guide">
+  <Modal show close={props.close} title={t('OpenAI Guide')} maxWidth="half" ariaLabel={t('OpenAI guide')}>
     <div class="flex flex-col gap-2">
       <Card>
         OpenAI is a <b>paid service</b>. To use OpenAI, you to need provide your OpenAI API Key in
@@ -467,7 +468,7 @@ const OpenAIGuide: Component<{ close: () => void }> = (props) => (
       <Card>
         Once you have your API key, head to the{' '}
         <A class="link" href="/settings?tab=ai&service=openai">
-          Settings
+          {t('Settings')}
         </A>{' '}
         page and set your key in the OpenAI area.
       </Card>

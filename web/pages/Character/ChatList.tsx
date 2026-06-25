@@ -34,6 +34,7 @@ import { ManualPaginate, usePagination } from '/web/shared/Paginate'
 import { Page } from '/web/Layout'
 import { on } from 'solid-js'
 import { toMap } from '/common/util'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 const baseSortOptions = [
   { value: 'chat-updated', label: 'Chat Activity', kind: 'chat' },
@@ -70,11 +71,11 @@ const CharacterChats: Component = () => {
   }))
 
   const sortOptions = createMemo(() => {
-    const opts = baseSortOptions.slice()
+    const opts = baseSortOptions.map((opt) => ({ ...opt, label: t(opt.label) }))
     const hasCounts = state.chats.some((c) => !!c.messageCount)
 
     if (hasCounts) {
-      opts.push({ value: 'chat-count', label: 'Chat Counts', kind: 'chat' })
+      opts.push({ value: 'chat-count', label: t('Chat Counts'), kind: 'chat' })
     }
 
     return opts
@@ -153,7 +154,7 @@ const CharacterChats: Component = () => {
           setImport(true)
         }}
       >
-        <Import /> <span class="hidden sm:inline">Import</span>
+          <Import /> <span class="hidden sm:inline">{t('Import')}</span>
       </button>
       <Show when={!!params.id}>
         <button
@@ -163,7 +164,7 @@ const CharacterChats: Component = () => {
             nav(`/character/${params.id}/edit`)
           }}
         >
-          <Edit /> <span class="hidden sm:inline">Edit</span>
+          <Edit /> <span class="hidden sm:inline">{t('Edit')}</span>
         </button>
       </Show>
       <button
@@ -178,7 +179,7 @@ const CharacterChats: Component = () => {
           nav(`/chats/create/${params.id || ''}`)
         }}
       >
-        <Plus /> <span class="hidden sm:inline">New</span>
+        <Plus /> <span class="hidden sm:inline">{t('New')}</span>
       </button>
     </>
   )
@@ -188,7 +189,7 @@ const CharacterChats: Component = () => {
       <PageHeader
         title={
           <div class="flex w-full justify-between">
-            <div>Chats</div>
+            <div>{t('Chats')}</div>
             <div class="flex gap-1 text-base">
               <Options />
             </div>
@@ -200,7 +201,7 @@ const CharacterChats: Component = () => {
         <div>
           <TextInput
             fieldName="search"
-            placeholder="Search..."
+            placeholder={t('Search...')}
             onKeyUp={(ev) => setSearch(ev.currentTarget.value)}
           />
         </div>
@@ -209,7 +210,7 @@ const CharacterChats: Component = () => {
           class="w-48"
           fieldName="char"
           items={chars.list}
-          emptyLabel="All Characters"
+          emptyLabel={t('All Characters')}
           value={charId()}
           onChange={(char) => setCharId(char?._id)}
         />
@@ -302,7 +303,7 @@ const Chats: Component<{
                 <div class="font-bold">{char!.name}</div>
               </Show>
               <Show when={chats.length === 0}>
-                <div>No conversations</div>
+                <div>{t('No conversations')}</div>
               </Show>
               <For each={chats}>
                 {(chat) => (
@@ -375,7 +376,7 @@ const Chats: Component<{
         show={!!showDelete()}
         close={() => setDelete('')}
         confirm={confirmDelete}
-        message="Are you sure you wish to delete the conversation?"
+        message={t('Are you sure you wish to delete the conversation?')}
       />
     </div>
   )
@@ -394,9 +395,9 @@ const NoChats: Component<{ character?: string }> = (props) => {
     >
       <div class="mt-4 flex w-full justify-center text-xl">
         <div>
-          <Show when={!props.character}>You have no conversations yet.</Show>
+          <Show when={!props.character}>{t('You have no conversations yet.')}</Show>
           <Show when={props.character}>
-            You have no conversations with <i>{props.character}</i>.
+            {t('You have no conversations with')} <i>{props.character}</i>.
           </Show>
         </div>
       </div>
@@ -439,7 +440,7 @@ function toChatListState(chars: Record<string, AppSchema.Character>, chat: AllCh
     seen.add(id)
     const char = chars[id]
     if (!char) {
-      rows.push({ _id: '', name: 'Unknown', description: '', avatar: '' })
+      rows.push({ _id: '', name: t('Unknown'), description: '', avatar: '' })
       continue
     }
 

@@ -47,6 +47,7 @@ import { api } from './store/api'
 import { GlobalFileInput } from './shared/GlobalFileInput'
 import { pageStore } from './store'
 import AdminChineseLocalizer from './shared/AdminChineseLocalizer'
+import { t } from './shared/AdminChineseLocalizer'
 
 const App: Component = () => {
   const state = userStore((s) => ({ user: s.user, loggedIn: s.loggedIn }))
@@ -201,21 +202,21 @@ const Layout: Component<{ children?: any }> = (props) => {
                 <Match when={cfg.initLoading}>
                   <div class="flex h-[80vh] flex-col items-center justify-center gap-2">
                     <div>
-                      Login issues? Try{' '}
+                      {t('Login issues? Try')}{' '}
                       <a class="link" onClick={() => userStore.logout()}>
-                        Logging out
+                        {t('Logging out')}
                       </a>{' '}
-                      then log back in.
+                      {t('then log back in.')}
                     </div>
 
                     <Show when={api.getFallbackApiUrl()}>
                       <div>
-                        Page loading issues? Try{' '}
+                        {t('Page loading issues? Try')}{' '}
                         <a
                           class="link"
                           href={`https://agnai.chat?api_url=${api.getFallbackApiUrl()}`}
                         >
-                          clicking here
+                          {t('clicking here')}
                         </a>
                       </div>
                     </Show>
@@ -226,9 +227,9 @@ const Layout: Component<{ children?: any }> = (props) => {
 
                 <Match when>
                   <div class="flex flex-col items-center gap-2">
-                    <div>Agnaistic failed to load</div>
+                    <div>{t('Agnaistic failed to load')}</div>
                     <div>
-                      <Button onClick={reload}>Try Again</Button>
+                      <Button onClick={reload}>{t('Try Again')}</Button>
                     </div>
                   </div>
                 </Match>
@@ -257,7 +258,7 @@ const Layout: Component<{ children?: any }> = (props) => {
       <Show when={!!page.confirm}>
         <Modal
           show={true}
-          title={page.confirm?.title || 'Confirm'}
+          title={page.confirm?.title || t('Confirm')}
           close={() => pageStore.closeConfirm(false)}
           footer={
             <>
@@ -277,12 +278,12 @@ const Layout: Component<{ children?: any }> = (props) => {
 
               <Show
                 when={page.confirm?.onConfirm}
-                fallback={<Button onClick={() => pageStore.closeConfirm(false)}>Close</Button>}
+                fallback={<Button onClick={() => pageStore.closeConfirm(false)}>{t('Close')}</Button>}
               >
-                <Button onClick={() => pageStore.closeConfirm(false)}>Cancel</Button>
+                <Button onClick={() => pageStore.closeConfirm(false)}>{t('Cancel')}</Button>
 
                 <Button schema="green" onClick={() => pageStore.closeConfirm(true)}>
-                  Confirm
+                  {t('Confirm')}
                 </Button>
               </Show>
             </>
@@ -300,7 +301,7 @@ const InfoModal: Component = (props) => {
 
   return (
     <Modal
-      title={state.info?.title || 'Information'}
+      title={state.info?.title || t('Information')}
       show={!!state.info?.content}
       close={() => pageStore.closeInfo()}
       maxWidth="half"
@@ -318,11 +319,11 @@ const BannedModal: Component = () => {
   }))
 
   return (
-    <Modal show={!!state.banned} close={() => userStore.logout()} title="Account Banned">
+    <Modal show={!!state.banned} close={() => userStore.logout()} title={t('Account Banned')}>
       <div class="flex flex-col items-center">
-        <p class="">This account has been banned for the following reason:</p>
+        <p class="">{t('This account has been banned for the following reason:')}</p>
         <p class="my-2 flex items-center font-bold">{state.banned}</p>
-        <p>If you believe this is an error, please contact support.</p>
+        <p>{t('If you believe this is an error, please contact support.')}</p>
       </div>
     </Modal>
   )

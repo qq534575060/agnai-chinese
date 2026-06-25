@@ -65,6 +65,7 @@ import { navStore } from './subnav'
 import { getRgbaFromVar } from './shared/colors'
 import { CallToAction } from './shared/CallToAction'
 import Button from './shared/Button'
+import { t } from './shared/AdminChineseLocalizer'
 
 const Navigation: Component = () => {
   let parent: any
@@ -161,7 +162,7 @@ const Navigation: Component = () => {
           'drawer--pane-open': pane.showing(),
         }}
         role="navigation"
-        aria-label="Main"
+        aria-label={t('Main')}
       >
         <div ref={content} class="drawer__content sm:text-md text-md flex flex-col gap-1 sm:gap-1">
           <div class="flex w-full items-center justify-between px-2">
@@ -181,7 +182,7 @@ const Navigation: Component = () => {
                 class="w-8/12 max-w-[calc(100%-64px)]"
                 href="/"
                 role="link"
-                aria-label="Agnaistic main page"
+                aria-label={t('Agnaistic main page')}
               >
                 <div
                   class="flex h-8 w-full items-center justify-center rounded-lg text-lg font-bold tracking-wide"
@@ -239,14 +240,14 @@ const Navigation: Component = () => {
           <Show when={state.config.policies}>
             <div class="text-500 flex w-full justify-center gap-4 text-xs">
               <div>
-                <A href="/terms-of-service">Term of Service</A>
+                <A href="/terms-of-service">{t('Term of Service')}</A>
               </div>
               <div>
-                <A href="/privacy-policy">Privacy Policy</A>
+                <A href="/privacy-policy">{t('Privacy Policy')}</A>
               </div>
             </div>
           </Show>
-          <div class="text-500 mb-1 text-[0.6rem] italic" role="contentinfo" aria-label="Version">
+          <div class="text-500 mb-1 text-[0.6rem] italic" role="contentinfo" aria-label={t('Version')}>
             ver. {sha()}
           </div>
         </div>
@@ -277,7 +278,7 @@ const UserNavigation: Component = () => {
 
         <Show when={page.flags.chub}>
           <MultiItem>
-            <Item href="/chub" ariaLabel="Character hub">
+            <Item href="/chub" ariaLabel={t('Character hub')}>
               <ShoppingBag aria-hidden="true" />
               CharHub
             </Item>
@@ -292,20 +293,20 @@ const UserNavigation: Component = () => {
         <ChatLink />
 
         <Show when={guidance()}>
-          <Item href="/saga" ariaLabel="Sagas Preview">
+          <Item href="/saga" ariaLabel={t('Sagas Preview')}>
             <Wand2 aria-hidden="true" />
-            Sagas Preview
+            {t('Sagas Preview')}
           </Item>
         </Show>
 
         <Library />
         <MultiItem>
-          <Item href="/presets" ariaLabel="Presets">
+          <Item href="/presets" ariaLabel={t('Presets')}>
             <Sliders aria-hidden="true" />
-            <span aria-hidden="true">Presets</span>
+            <span aria-hidden="true">{t('Presets')}</span>
           </Item>
           <EndItem>
-            <A class="icon-button" href="/presets/new" role="button" aria-label="Add a new preset">
+            <A class="icon-button" href="/presets/new" role="button" aria-label={t('Add a new preset')}>
               <Plus aria-hidden="true" />
             </A>
           </EndItem>
@@ -316,22 +317,22 @@ const UserNavigation: Component = () => {
         </Show>
 
         <Show when={user.user?.admin}>
-          <Item href="/admin/metrics" ariaLabel="管理后台">
+          <Item href="/admin/metrics" ariaLabel={t('Manage')}>
             <Activity aria-hidden="true" />
-            <span aria-hidden="true">管理后台</span>
+            <span aria-hidden="true">{t('Manage')}</span>
           </Item>
           <SubMenu>
-            <SubItem href="/admin/configuration" parent="/" ariaLabel="服务器配置">
-              服务器配置
+            <SubItem href="/admin/configuration" parent="/" ariaLabel={t('Server Configuration')}>
+              {t('Server Configuration')}
             </SubItem>
-            <SubItem href="/admin/users" parent="/" ariaLabel="用户管理">
-              用户管理
+            <SubItem href="/admin/users" parent="/" ariaLabel={t('User Management')}>
+              {t('User Management')}
             </SubItem>
-            <SubItem href="/admin/subscriptions" parent="/" ariaLabel="订阅与模型">
-              订阅与模型
+            <SubItem href="/admin/subscriptions" parent="/" ariaLabel={t('Subscriptions')}>
+              {t('Subscriptions')}
             </SubItem>
-            <SubItem href="/admin/announcements" parent="/" ariaLabel="公告管理">
-              公告管理
+            <SubItem href="/admin/announcements" parent="/" ariaLabel={t('Announcements')}>
+              {t('Announcements')}
             </SubItem>
           </SubMenu>
         </Show>
@@ -361,11 +362,11 @@ const GuestNavigation: Component = () => {
         <Show when={menu.config.canAuth}>
           <Item
             href="/login"
-            ariaLabel="Login to the application"
+            ariaLabel={t('Login to the application')}
             onClick={() => soundEmitter.emit('menu-item-clicked', 'login')}
             class="tour-register"
           >
-            <LogIn /> Login
+            <LogIn /> {t('Login')}
           </Item>
         </Show>
 
@@ -375,9 +376,9 @@ const GuestNavigation: Component = () => {
           <CharacterLink />
 
           <Show when={page.flags.chub}>
-            <Item href="/chub" ariaLabel="Character hub">
+            <Item href="/chub" ariaLabel={t('Character hub')}>
               <ShoppingBag aria-hidden="true" />
-              CHUB
+              {t('CHUB')}
             </Item>
           </Show>
 
@@ -388,17 +389,17 @@ const GuestNavigation: Component = () => {
           <MultiItem>
             <Item
               href="/presets"
-              ariaLabel="Presets"
+              ariaLabel={t('Presets')}
               onClick={() => soundEmitter.emit('menu-item-clicked', 'presets')}
             >
-              <Sliders /> Presets
+              <Sliders /> {t('Presets')}
             </Item>
             <EndItem>
               <A
                 class="icon-button"
                 href="/presets/new"
                 role="button"
-                aria-label="Add a new preset"
+                aria-label={t('Add a new preset')}
               >
                 <Plus aria-hidden="true" />
               </A>
@@ -443,7 +444,7 @@ export const NotificationBell: Component<{ showMenu?: boolean; size?: number }> 
         if (props.showMenu) pageStore.closeMenu()
         toastStore.modal(true)
       }}
-      ariaLabel="Show notification list"
+      ariaLabel={t('Show notification list')}
     >
       <Switch>
         <Match when={count() > 0}>
@@ -463,7 +464,7 @@ export const NotificationBell: Component<{ showMenu?: boolean; size?: number }> 
           <Bell
             color="var(--bg-500)"
             role="status"
-            aria-label="Status: No new notifications"
+            aria-label={t('Status: No new notifications')}
             size={props.size}
           />
         </Match>
@@ -483,31 +484,31 @@ const NavIcons: Component<{
     <>
       <div class="flex flex-wrap justify-center gap-[2px] text-sm">
         <Show when={!!props.supportEmail}>
-          <ExternalLink href={`mailto:${props.supportEmail}`} newtab ariaLabel="Email Support">
+          <ExternalLink href={`mailto:${props.supportEmail}`} newtab ariaLabel={t('Email Support')}>
             <Tooltip position="top" tip={`${props.supportEmail?.split?.(',')[0]}`}>
               <MailQuestion aria-hidden />
             </Tooltip>
           </ExternalLink>
         </Show>
 
-        <Item href="/faq" ariaLabel="Open FAQ page">
+        <Item href="/faq" ariaLabel={t('Open FAQ page')}>
           <HelpCircle aria-hidden="true" />
         </Item>
 
-        <Item onClick={() => pageStore.settings(true)} ariaLabel="Open settings page">
+        <Item onClick={() => pageStore.settings(true)} ariaLabel={t('Open settings page')}>
           <Settings aria-hidden="true" />
         </Item>
 
         <Item
           onClick={() => imageStore.openImageGen({ collectionId: 'global' })}
-          ariaLabel="Image Generation"
-          tooltip="Image Generation"
+          ariaLabel={t('Image Generation')}
+          tooltip={t('Image Generation')}
         >
           <ImagePlus aria-hidden="true" />
         </Item>
 
         <Item
-          ariaLabel="Toggle between light and dark mode"
+          ariaLabel={t('Toggle between light and dark mode')}
           onClick={() => {
             userStore.saveUI({ mode: user.ui.mode === 'light' ? 'dark' : 'light' })
           }}
@@ -663,11 +664,11 @@ const Library: Component<{}> = (props) => {
     <div class="grid w-full gap-2" style={{ 'grid-template-columns': '1fr 30px' }}>
       <Item
         href="/memory"
-        ariaLabel="Library"
+        ariaLabel={t('Library')}
         onClick={() => soundEmitter.emit('menu-item-clicked', 'library')}
       >
         <Book aria-hidden="true" />
-        <span aria-hidden="true"> Library </span>
+        <span aria-hidden="true"> {t('Library')} </span>
       </Item>
     </div>
   )
@@ -679,7 +680,7 @@ const Sounds: Component<{}> = (props) => {
   return (
     <MultiItem>
       <Item href="/sounds" onClick={() => soundEmitter.emit('menu-item-clicked', 'sounds')}>
-        <Speaker /> Sounds
+        <Speaker /> {t('Sounds')}
       </Item>
       <EndItem>
         <a class="icon-button" onClick={() => audioStore.toggleMuteTrack('master')}>
@@ -700,15 +701,15 @@ const CharacterLink = () => {
     <MultiItem>
       <Item
         href="/character/list"
-        ariaLabel="Characters"
+        ariaLabel={t('Characters')}
         onClick={() => soundEmitter.emit('menu-item-clicked', 'characters')}
         class="tour-character"
       >
         <WizardIcon aria-hidden="true" />
-        <span aria-hidden="true"> Characters </span>
+        <span aria-hidden="true"> {t('Characters')} </span>
       </Item>
       <EndItem>
-        <A class="icon-button" href="/editor" role="button" aria-label="Add a new character">
+        <A class="icon-button" href="/editor" role="button" aria-label={t('Add a new character')}>
           <Plus aria-hidden="true" />
         </A>
       </EndItem>
@@ -721,14 +722,14 @@ const ChatLink = () => {
     <MultiItem>
       <Item
         href="/chats"
-        ariaLabel="Chats"
+        ariaLabel={t('Chats')}
         onClick={() => soundEmitter.emit('menu-item-clicked', 'chats')}
       >
         <MessageCircle fill="var(--bg-100)" aria-hidden="true" />
-        <span aria-hidden="true"> Chats </span>
+        <span aria-hidden="true"> {t('Chats')} </span>
       </Item>
       <EndItem>
-        <A class="icon-button" href="/chats/create" role="button" aria-label="Create a new chat">
+        <A class="icon-button" href="/chats/create" role="button" aria-label={t('Create a new chat')}>
           <Plus aria-hidden="true" />
         </A>
       </EndItem>
@@ -750,7 +751,7 @@ export const UserProfile = () => {
         }}
       >
         <Item
-          ariaLabel="Edit user profile"
+          ariaLabel={t('Edit user profile')}
           onClick={() => {
             if (menu.showMenu) pageStore.closeMenu()
             soundEmitter.emit('menu-item-clicked', 'profile')
@@ -779,13 +780,13 @@ export const UserProfile = () => {
             class="text-600 text-xs"
             schema="secondary"
             size="sm"
-            aria-label="Open impersonation menu"
+            aria-label={t('Open impersonation menu')}
             onClick={() => {
               pageStore.toggleImpersonate(true)
               if (menu.showMenu) pageStore.closeMenu()
             }}
           >
-            Persona
+            {t('Persona')}
             {/* <VenetianMask aria-hidden="true" /> */}
           </Button>
         </div>
@@ -870,7 +871,7 @@ export const SubCTA: Component<{
     <Show when={settings.config.patreon}>
       <CallToAction theme="hl" targets={['guests', 'users']} width={props.width || 'fit'}>
         <div class="flex cursor-pointer justify-center text-center text-sm" onClick={openSubPage}>
-          <Show when={props.children} fallback={<>Subscribe for higher quality chats and no ads</>}>
+          <Show when={props.children} fallback={<>{t('Subscribe for higher quality chats and no ads')}</>}>
             {props.children}
           </Show>
         </div>

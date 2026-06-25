@@ -13,9 +13,10 @@ import { Page } from '/web/Layout'
 import { useGoogleReady } from '/web/shared/hooks'
 import { createStore } from 'solid-js/store'
 import { wait } from '/common/util'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 const LoginPage: Component = () => {
-  setComponentPageTitle('Login')
+  setComponentPageTitle(t('Login'))
   const store = userStore((s) => ({ error: s.error, loggedIn: s.loggedIn, loading: s.loading }))
   const cfg = settingStore((s) => ({ config: s.config }))
   const [query] = useSearchParams()
@@ -26,10 +27,10 @@ const LoginPage: Component = () => {
   const loginError = createMemo(() => {
     if (!store.error) return null
     if (store.error.includes('NetworkError')) {
-      return "We couldn't reach our servers."
+      return t("We couldn't reach our servers.")
     }
 
-    return 'Something went wrong.'
+    return t('Something went wrong.')
   })
 
   return (
@@ -38,23 +39,23 @@ const LoginPage: Component = () => {
       <PageHeader
         title={
           <div class="flex w-full justify-center">
-            <Show when={query.callback} fallback="Welcome">
-              Authorizing
+            <Show when={query.callback} fallback={t('Welcome')}>
+              {t('Authorizing')}
             </Show>
           </div>
         }
         subtitle={
           <div class="flex flex-wrap items-center justify-center">
-            <Show when={store.loggedIn}>You are already logged in.</Show>
+            <Show when={store.loggedIn}>{t('You are already logged in.')}</Show>
             <Show when={!store.loggedIn}>
               <Button size="pill" onClick={() => setRegister(false)}>
-                Login
+                {t('Login')}
               </Button>
-              &nbsp; to your account or&nbsp;
+              &nbsp; {t('to your account or')}&nbsp;
               <Button size="pill" onClick={() => setRegister(true)}>
-                Register
+                {t('Register')}
               </Button>
-              &nbsp;or continue as a guest.
+              &nbsp;{t('or continue as a guest.')}
             </Show>
           </div>
         }
@@ -68,7 +69,7 @@ const LoginPage: Component = () => {
         </Show>
         <Show when={loginError()}>
           <Divider />
-          <Alert schema="error" title="Failed to log in.">
+          <Alert schema="error" title={t('Failed to log in.')}>
             {loginError()}
           </Alert>
         </Show>
@@ -78,18 +79,18 @@ const LoginPage: Component = () => {
         <div class="mt-2">
           By logging in or registering, you agree that you are 18 years or older and agree to the{' '}
           <A class="link" href="/terms-of-service">
-            Terms
+            {t('Terms')}
           </A>{' '}
           and{' '}
           <A class="link" href="/privacy-policy">
-            Privacy Policy
+            {t('Privacy Policy')}
           </A>
           .
         </div>
       </Show>
 
       <div class="mt-8 w-full gap-4">
-        <p class="flex justify-center text-xl text-[var(--hl-400)]">Why register?</p>
+        <p class="flex justify-center text-xl text-[var(--hl-400)]">{t('Why register?')}</p>
         <div class="flex flex-col items-center">
           <p>
             You don't need to register to use Agnaistic. You can use it anonymously and no data will
@@ -117,7 +118,7 @@ const RegisterForm: Component<FormProps> = (props) => {
 
     if (!handle || !username || !password) return
     if (password !== confirm) {
-      toastStore.warn('Passwords do not match', { ttl: 2 })
+      toastStore.warn(t('Passwords do not match'), { ttl: 2 })
       return
     }
 
@@ -128,27 +129,27 @@ const RegisterForm: Component<FormProps> = (props) => {
     <form onSubmit={register} class="flex flex-col gap-6">
       <div class="flex flex-col gap-2">
         <TextInput
-          label="Display Name"
-          placeholder="Display name"
+          label={t('Display Name')}
+          placeholder={t('Display name')}
           required
           onChange={(ev) => setStore('handle', ev.currentTarget.value)}
         />
         <TextInput
-          label="Username"
+          label={t('Username')}
           fieldName="username"
-          placeholder="Username"
+          placeholder={t('Username')}
           required
           onChange={(ev) => setStore('username', ev.currentTarget.value)}
         />
         <TextInput
-          label="Password"
-          placeholder="Password"
+          label={t('Password')}
+          placeholder={t('Password')}
           type="password"
           onChange={(ev) => setStore('password', ev.currentTarget.value)}
           required
         />
         <TextInput
-          placeholder="Confirm Password"
+          placeholder={t('Confirm Password')}
           type="password"
           required
           onChange={(ev) => setStore('confirm', ev.currentTarget.value)}
@@ -157,7 +158,7 @@ const RegisterForm: Component<FormProps> = (props) => {
       </div>
 
       <Button disabled={props.isLoading} onClick={register}>
-        {props.isLoading ? 'Registering...' : 'Register'}
+        {props.isLoading ? t('Registering...') : t('Register')}
       </Button>
     </form>
   )
@@ -186,7 +187,7 @@ const LoginForm: Component<FormProps> = (props) => {
       for (const authUrl of state.config.authUrls) {
         if (query.callback.startsWith(authUrl)) return handleLogin()
       }
-      setError('Invalid callback URL')
+      setError(t('Invalid callback URL'))
       return
     }
   })
@@ -247,14 +248,14 @@ const LoginForm: Component<FormProps> = (props) => {
     <form class="flex flex-col gap-6">
       <div class="flex flex-col gap-2">
         <TextInput
-          placeholder="Username"
+          placeholder={t('Username')}
           disabled={user.loggedIn}
           required
           value={store.username}
           onChange={(ev) => setStore('username', ev.currentTarget.value)}
         />
         <TextInput
-          placeholder="Password"
+          placeholder={t('Password')}
           type="password"
           required
           disabled={user.loggedIn}
@@ -268,7 +269,7 @@ const LoginForm: Component<FormProps> = (props) => {
       </Show>
 
       <Button onClick={login} disabled={user.loggedIn || props.isLoading || !!error()}>
-        {props.isLoading ? 'Logging in...' : 'Login'}
+        {props.isLoading ? t('Logging in...') : t('Login')}
       </Button>
 
       <div

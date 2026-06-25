@@ -41,6 +41,7 @@ import { Page } from '/web/Layout'
 import { DragDropProvider, DragDropSensors } from '@thisbeyond/solid-dnd'
 import { isMobile } from '/web/shared/hooks'
 import { createStore } from 'solid-js/store'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 const CACHE_KEY = 'agnai-charlist-cache'
 
@@ -52,15 +53,8 @@ type ListCache = {
   }
 }
 
-const sortOptions: Option<SortField>[] = [
-  { value: 'modified', label: 'Last Modified' },
-  { value: 'conversed', label: 'Last Conversed' },
-  { value: 'created', label: 'Created' },
-  { value: 'name', label: 'Name' },
-]
-
 const CharacterList: Component = () => {
-  setComponentPageTitle('Characters')
+  setComponentPageTitle(t('Characters'))
 
   const cached = getListCache()
   const [query, setQuery] = useSearchParams()
@@ -74,6 +68,12 @@ const CharacterList: Component = () => {
 
   const tags = tagStore((s) => ({ filter: s.filter, hidden: s.hidden }))
   const user = userStore((s) => ({ user: s.user }))
+  const sortOptions = createMemo<Option<SortField>[]>(() => [
+    { value: 'modified', label: t('Last Modified') },
+    { value: 'conversed', label: t('Last Conversed') },
+    { value: 'created', label: t('Created') },
+    { value: 'name', label: t('Name') },
+  ])
 
   const chats = chatStore((s) => {
     return {
@@ -216,7 +216,7 @@ const CharacterList: Component = () => {
 
     if (selected.count) {
       pageStore.openConfirm({
-        message: `Archive ${selected.count} characters?`,
+        message: `${t('Archive characters?')} (${selected.count})`,
         onConfirm: () => characterStore.editMany(selected.ids, { type: 'archive' }),
       })
     }
@@ -247,7 +247,7 @@ const CharacterList: Component = () => {
 
     if (selected.count) {
       pageStore.openConfirm({
-        message: `Unarchive ${selected.count} characters?`,
+        message: `${t('Unarchive characters?')} (${selected.count})`,
         onConfirm: () =>
           characterStore.editMany(selected.ids, { type: 'remove-tag', value: 'archived' }),
       })
@@ -259,7 +259,7 @@ const CharacterList: Component = () => {
 
     if (selected.count) {
       pageStore.openConfirm({
-        message: `Are you sure you wish to delete ${selected.count} characters?`,
+        message: `${t('Are you sure you wish to delete characters?')} (${selected.count})`,
         onConfirm: () => characterStore.editMany(selected.ids, { type: 'delete' }),
       })
     }
@@ -268,22 +268,22 @@ const CharacterList: Component = () => {
   return (
     <Page>
       <PageHeader
-        title={'Characters'}
+        title={t('Characters')}
         subtitle={
           <div class="flex flex-col gap-2">
             <div class="flex gap-2 text-base">
               <Button size="sm" onClick={() => setImport(true)}>
                 <Import />
-                <span class="hidden sm:inline">Import</span>
+                <span class="hidden sm:inline">{t('Import')}</span>
               </Button>
 
               <Button size="sm" onClick={() => nav('/character/create')}>
                 <Plus />
-                <span class="hidden sm:inline">Create</span>
+                <span class="hidden sm:inline">{t('Create')}</span>
               </Button>
 
               <Button size="sm" class="!h-[32px]" onClick={() => setMulti(true)}>
-                Select
+                {t('Select')}
               </Button>
 
               <Button onClick={() => characterStore.getAllChats()} size="sm">
@@ -299,7 +299,7 @@ const CharacterList: Component = () => {
           <div class="m-1 ml-0 mr-1">
             <TextInput
               fieldName="search"
-              placeholder="Search by name..."
+              placeholder={t('Search by name...')}
               onChange={(ev) => setSearch(ev.currentTarget.value)}
             />
           </div>
@@ -308,7 +308,7 @@ const CharacterList: Component = () => {
             <Select
               class="m-1 ml-0 bg-[var(--bg-600)]"
               fieldName="sortBy"
-              items={sortOptions}
+              items={sortOptions()}
               value={sortField()}
               onChange={(next) => setSortField(next.value as SortField)}
             />
@@ -335,13 +335,13 @@ const CharacterList: Component = () => {
             <Button schema="secondary" onClick={() => setView(getNextView())}>
               <Switch>
                 <Match when={getNextView() === 'list'}>
-                  <span class="hidden sm:block">List View</span> <LayoutList />
+                  <span class="hidden sm:block">{t('List View')}</span> <LayoutList />
                 </Match>
                 <Match when={getNextView() === 'cards'}>
-                  <span class="hidden sm:block">Cards View</span> <Image />
+                  <span class="hidden sm:block">{t('Cards View')}</span> <Image />
                 </Match>
                 <Match when={getNextView() === 'folders'}>
-                  <span class="hidden sm:block">Folder View</span> <Image />
+                  <span class="hidden sm:block">{t('Folder View')}</span> <Image />
                 </Match>
               </Switch>
             </Button>
@@ -352,8 +352,8 @@ const CharacterList: Component = () => {
       <Show when={multi()}>
         <div class="py-1">
           <div class="text-500 text-xs font-bold">
-            <Show when={multiSelected().count > 0} fallback={'Selected: None'}>
-              Selected: {multiSelected().count}
+            <Show when={multiSelected().count > 0} fallback={t('Selected: None')}>
+              {t('Selected')}: {multiSelected().count}
             </Show>
           </div>
           <div class="flex flex-wrap items-center gap-2 text-base">
@@ -363,14 +363,14 @@ const CharacterList: Component = () => {
               disabled={multiSelected().count === 0}
               onClick={deleteSelected}
             >
-              Delete
+              {t('Delete')}
             </Button>
             <Button
               size="sm"
               disabled={multiSelected().count === 0 || !canArchive()}
               onClick={archiveSelected}
             >
-              Archive
+              {t('Archive')}
             </Button>
 
             <Button
@@ -378,15 +378,15 @@ const CharacterList: Component = () => {
               disabled={multiSelected().count === 0 || !canUnarchive()}
               onClick={unarchiveSelected}
             >
-              Unarchive
+              {t('Unarchive')}
             </Button>
 
             {/* @todo: need to get detailed char info for downloading before zipping */}
             <Button size="sm" disabled={multiSelected().count === 0} onClick={downloadSelected}>
-              Download
+              {t('Download')}
             </Button>
             <Button size="sm" schema="secondary" onClick={cancelSelect}>
-              Done
+              {t('Done')}
             </Button>
           </div>
         </div>
@@ -444,7 +444,7 @@ const Characters: Component<{
   const [showGrouping, setShowGrouping] = createSignal(false)
   const groups = createMemo(() => {
     const groups = [
-      { label: 'Favorites', list: props.favorites },
+      { label: t('Favorites'), list: props.favorites },
       { label: '', list: props.characters },
     ]
     if (groups[0].list.length === 0) {
@@ -468,7 +468,7 @@ const Characters: Component<{
     <>
       <DragDropProvider>
         <DragDropSensors />
-        <Switch fallback={<div>Failed to load characters. Refresh to try again.</div>}>
+        <Switch fallback={<div>{t('Failed to load characters. Refresh to try again.')}</div>}>
           <Match when={props.loading && props.allCharacters.length === 0}>
             <div class="flex justify-center">
               <Loading />
@@ -547,7 +547,7 @@ const EditCharacter: Component<{ char?: AppSchema.Character; close: () => void }
 
   return (
     <Modal
-      title={`Editing: ${props.char?.name}`}
+      title={`${t('Editing')}: ${props.char?.name}`}
       show
       close={props.close}
       maxWidth="half"
@@ -608,11 +608,11 @@ function saveListCache(cache: ListCache) {
 
 const NoCharacters: Component = () => (
   <div class="mt-16 flex w-full justify-center rounded-full text-xl">
-    No characters found&nbsp;
+    {t('No characters found')}&nbsp;
     <A class="text-[var(--hl-500)]" href="/character/create">
-      Create a character
+      {t('Create a character')}
     </A>
-    &nbsp;to get started!
+    &nbsp;{t('to get started!')}
   </div>
 )
 
