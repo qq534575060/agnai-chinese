@@ -1,7 +1,173 @@
 import { useLocation } from '@solidjs/router'
-import { Component, createEffect, onCleanup } from 'solid-js'
+import { Component, createEffect, createSignal, onCleanup } from 'solid-js'
+
+export type AppLanguage = 'zh-CN' | 'en'
+
+export const LANGUAGE_STORAGE_KEY = 'agnai.language'
+
+export function getAppLanguage(): AppLanguage {
+  if (typeof localStorage === 'undefined') return 'zh-CN'
+  const saved = localStorage.getItem(LANGUAGE_STORAGE_KEY)
+  return saved === 'en' ? 'en' : 'zh-CN'
+}
+
+export function setAppLanguage(language: AppLanguage) {
+  const current = getAppLanguage()
+  localStorage.setItem(LANGUAGE_STORAGE_KEY, language)
+  document.documentElement.lang = language
+  window.dispatchEvent(new CustomEvent('agnai-language-change', { detail: language }))
+
+  if (current !== language && language === 'en') {
+    window.location.reload()
+  }
+}
 
 const TEXT: Record<string, string> = {
+  Agnaistic: 'Agnaistic',
+  AI: 'AI',
+  UI: '界面',
+  Voice: '语音',
+  'Guest Data': '访客数据',
+  Subscription: '订阅',
+  'Update Settings': '更新设置',
+  Language: '语言',
+  English: 'English',
+  'Simplified Chinese': '简体中文',
+  Login: '登录',
+  Logout: '退出登录',
+  Register: '注册',
+  Password: '密码',
+  'Confirm Password': '确认密码',
+  Account: '账户',
+  Profile: '个人资料',
+  Avatar: '头像',
+  Save: '保存',
+  Saved: '已保存',
+  Update: '更新',
+  Delete: '删除',
+  Remove: '移除',
+  Edit: '编辑',
+  Copy: '复制',
+  Import: '导入',
+  Export: '导出',
+  Download: '下载',
+  Upload: '上传',
+  Create: '创建',
+  Cancel: '取消',
+  Close: '关闭',
+  Confirm: '确认',
+  Search: '搜索',
+  Filter: '筛选',
+  Reset: '重置',
+  Refresh: '刷新',
+  Retry: '重试',
+  Continue: '继续',
+  Back: '返回',
+  Next: '下一步',
+  Previous: '上一步',
+  Yes: '是',
+  No: '否',
+  On: '开启',
+  Off: '关闭',
+  Enabled: '已启用',
+  Disabled: '已禁用',
+  Default: '默认',
+  None: '无',
+  All: '全部',
+  Name: '名称',
+  Description: '描述',
+  Tags: '标签',
+  Tag: '标签',
+  Title: '标题',
+  Content: '内容',
+  Type: '类型',
+  Status: '状态',
+  State: '状态',
+  Actions: '操作',
+  Options: '选项',
+  Settings: '设置',
+  Characters: '角色',
+  Character: '角色',
+  Chats: '聊天',
+  Chat: '聊天',
+  Scenarios: '场景',
+  Scenario: '场景',
+  Memory: '记忆',
+  Library: '库',
+  Presets: '预设',
+  Preset: '预设',
+  'Generation Presets': '生成预设',
+  'Prompt Templates': '提示词模板',
+  'Memory Books': '记忆书',
+  'Memory Book': '记忆书',
+  'Edit Memory Book': '编辑记忆书',
+  'Character Hub': '角色中心',
+  Information: '信息',
+  FAQ: '常见问题',
+  Sounds: '音效',
+  Invites: '邀请',
+  'New Chat': '新建聊天',
+  'Create Chat': '创建聊天',
+  'Edit Chat': '编辑聊天',
+  'Delete Chat': '删除聊天',
+  'Chat Settings': '聊天设置',
+  'Image Settings': '图像设置',
+  'Site Settings': '站点设置',
+  'AI Settings': 'AI 设置',
+  'UI Settings': '界面设置',
+  'Voice Settings': '语音设置',
+  'Shared Settings': '共享设置',
+  'Character Settings': '角色设置',
+  'Current Chat Settings': '当前聊天设置',
+  'Create Character': '创建角色',
+  'Edit Character': '编辑角色',
+  'Import Character': '导入角色',
+  'Delete Character': '删除角色',
+  'Character Builder': '角色构建器',
+  Persona: '人设',
+  Greeting: '开场白',
+  'Sample Chat': '示例对话',
+  'System Prompt': '系统提示词',
+  Jailbreak: '越狱提示词',
+  Visibility: '可见性',
+  Public: '公开',
+  Private: '私有',
+  Prompt: '提示词',
+  Model: '模型',
+  Models: '模型',
+  Service: '服务',
+  Provider: '提供商',
+  Providers: '提供商',
+  'API Key': 'API 密钥',
+  URL: 'URL',
+  'Test Connection': '测试连接',
+  'Update Provider': '更新提供商',
+  'Create Provider': '创建提供商',
+  'Request Format': '请求格式',
+  'OpenAI Compatible': 'OpenAI 兼容',
+  'Self-Host / OpenAI Compatible': '自托管 / OpenAI 兼容',
+  'Custom label for this provider': '此提供商的自定义标签',
+  'Provide connection details to use an external service': '填写连接信息以使用外部服务',
+  Send: '发送',
+  'Send Message': '发送消息',
+  Stop: '停止',
+  Regenerate: '重新生成',
+  Swipe: '切换候选',
+  Impersonate: '扮演',
+  'Start Chat': '开始聊天',
+  'No Characters': '没有角色',
+  'No Chats': '没有聊天',
+  'No results': '没有结果',
+  Loading: '加载中',
+  'Try Again': '重试',
+  'Delete Guest State': '删除访客状态',
+  'This cannot be undone!': '此操作不可撤销！',
+  'Account Banned': '账户已被封禁',
+  'Agnaistic failed to load': 'Agnaistic 加载失败',
+  'Privacy Policy': '隐私政策',
+  'Terms of Service': '服务条款',
+  'Agnaistic Privacy Policy': 'Agnaistic 隐私政策',
+  'Agnaistic Terms of Service': 'Agnaistic 服务条款',
   Manage: '管理后台',
   Configuration: '服务器配置',
   Users: '用户管理',
@@ -554,6 +720,7 @@ const DYNAMIC_TEXT: Array<[RegExp, (match: RegExpMatchArray) => string]> = [
 
 const AdminChineseLocalizer: Component = () => {
   const location = useLocation()
+  const [language, setLanguage] = createSignal<AppLanguage>(getAppLanguage())
   let observer: MutationObserver | undefined
   let pending = false
 
@@ -568,10 +735,12 @@ const AdminChineseLocalizer: Component = () => {
   }
 
   createEffect(() => {
+    void location.pathname
+    document.documentElement.lang = language()
     observer?.disconnect()
     observer = undefined
 
-    if (!location.pathname.startsWith('/admin')) return
+    if (language() !== 'zh-CN') return
 
     schedule()
     setTimeout(() => schedule(), 80)
@@ -604,7 +773,17 @@ const AdminChineseLocalizer: Component = () => {
     })
   })
 
-  onCleanup(() => observer?.disconnect())
+  const onLanguageChange = (event: Event) => {
+    const next = (event as CustomEvent<AppLanguage>).detail || getAppLanguage()
+    setLanguage(next)
+  }
+
+  window.addEventListener('agnai-language-change', onLanguageChange)
+
+  onCleanup(() => {
+    observer?.disconnect()
+    window.removeEventListener('agnai-language-change', onLanguageChange)
+  })
 
   return null
 }
@@ -637,7 +816,7 @@ function localize(root: Node) {
 }
 
 function localizeElement(element: Element) {
-  if (shouldSkipElement(element)) return
+  if (shouldSkipAttributeElement(element)) return
 
   for (const attr of TEXT_ATTRIBUTES) {
     const value = element.getAttribute(attr)
@@ -713,6 +892,10 @@ function shouldSkipElement(element: Element) {
   return !!element.closest(
     'script, style, textarea, input, code, pre, kbd, samp, [data-no-localize]'
   )
+}
+
+function shouldSkipAttributeElement(element: Element) {
+  return !!element.closest('script, style, code, pre, kbd, samp, [data-no-localize]')
 }
 
 export default AdminChineseLocalizer

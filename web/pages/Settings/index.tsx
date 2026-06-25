@@ -15,6 +15,11 @@ import { SubscriptionPage } from '../Profile/SubscriptionPage'
 import { Page } from '/web/Layout'
 import { createStore } from 'solid-js/store'
 import { toUserStoreObject } from './util'
+import {
+  AppLanguage,
+  getAppLanguage,
+  setAppLanguage,
+} from '/web/shared/AdminChineseLocalizer'
 
 const settingTabs: Record<Tab, string> = {
   ai: 'AI',
@@ -73,6 +78,7 @@ const Settings: Component<{ footer?: (children: any) => void }> = (props) => {
 
   const [query, setQuery] = useSearchParams()
   const [tab, setTab] = createSignal<number>(+(query.tab ?? '0'))
+  const [language, setLanguage] = createSignal<AppLanguage>(getAppLanguage())
 
   const [store, setStore] = createStore(toUserStoreObject(user.user! || {}))
 
@@ -140,6 +146,21 @@ const Settings: Component<{ footer?: (children: any) => void }> = (props) => {
             <em>v.{version}</em>
           </div>
         </Show>
+        <label class="flex max-w-sm flex-col gap-1 text-sm">
+          <span>Language</span>
+          <select
+            class="rounded-md border border-[var(--bg-700)] bg-[var(--bg-800)] px-3 py-2"
+            value={language()}
+            onChange={(ev) => {
+              const next = ev.currentTarget.value as AppLanguage
+              setLanguage(next)
+              setAppLanguage(next)
+            }}
+          >
+            <option value="zh-CN">简体中文</option>
+            <option value="en">English</option>
+          </select>
+        </label>
       </div>
       <form autocomplete="off">
         <div class="flex flex-col gap-4">
