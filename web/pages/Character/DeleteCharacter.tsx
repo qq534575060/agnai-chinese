@@ -5,6 +5,7 @@ import { CharacterAvatar } from '../../shared/AvatarIcon'
 import Button from '../../shared/Button'
 import Modal from '../../shared/Modal'
 import { characterStore } from '../../store'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 const DeleteCharacterModal: Component<{
   char?: AppSchema.Character
@@ -27,30 +28,30 @@ const DeleteCharacterModal: Component<{
   return (
     <Modal
       show={props.show && !!props.char}
-      title="Confirm Deletion"
+      title={t('Confirm Deletion')}
       close={props.close}
       footer={
         <>
           <Button schema="secondary" onClick={props.close}>
             <X />
-            Cancel
+            {t('Cancel')}
           </Button>
 
           <Button schema="secondary" onClick={onArchive}>
-            <Archive /> Archive
+            <Archive /> {t('Archive')}
           </Button>
 
           <Button schema="red" onClick={onDelete}>
-            <Trash /> Delete
+            <Trash /> {t('Delete')}
           </Button>
         </>
       }
     >
       <div class="flex flex-col items-center gap-4">
         <div class="font-bold">
-          This will delete all of the chats associated with this character!
+          {t('This will delete all of the chats associated with this character!')}
         </div>
-        <div>Are you sure you wish to delete this character?</div>
+        <div>{t('Are you sure you wish to delete this character?')}</div>
         <div class="flex justify-center gap-4">
           <CharacterAvatar char={props.char!} format={{ size: 'md', corners: 'circle' }} />
           {props.char!.name}

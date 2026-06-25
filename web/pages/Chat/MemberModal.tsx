@@ -27,6 +27,7 @@ import { CreateCharacterForm } from '../Character/CreateCharacterForm'
 import Accordian from '/web/shared/Accordian'
 import CharacterSelect from '/web/shared/CharacterSelect'
 import { wait } from '/common/util'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 type View = 'list' | 'invite_user' | 'add_character' | 'temp_character'
 
@@ -66,20 +67,20 @@ const MemberModal: Component<{
             setView('temp_character')
           }}
         >
-          <Plus size={16} /> Temp Character
+          <Plus size={16} /> {t('Temp Character')}
         </Button>
         <Button schema="primary" onClick={() => setView('add_character')}>
-          <Plus size={16} /> Character
+          <Plus size={16} /> {t('Character')}
         </Button>
         <Show when={isLoggedIn()}>
           <Button schema="primary" onClick={() => setView('invite_user')}>
-            <Plus size={16} /> User
+            <Plus size={16} /> {t('User')}
           </Button>
         </Show>
       </Show>
       <Show when={view() !== 'list'}>
         <Button schema="secondary" onClick={() => setView('list')}>
-          <ArrowBigLeft size={16} /> Back
+          <ArrowBigLeft size={16} /> {t('Back')}
         </Button>
       </Show>
     </>
@@ -110,7 +111,7 @@ const MemberModal: Component<{
 
   return (
     <>
-      <Convertible title="Participants" close={paneClose} footer={footer()}>
+      <Convertible title={t('Participants')} close={paneClose} footer={footer()}>
         <div class="space-y-2 text-sm">
           <Switch>
             <Match when={view() === 'list'}>
@@ -202,7 +203,7 @@ const ParticipantsList: Component<{
 
       <Show when={lists().tempsActive.length > 0 || lists().tempsInactive.length > 0}>
         <Divider />
-        <h3>Temporary Characters</h3>
+        <h3>{t('Temporary Characters')}</h3>
       </Show>
 
       <For each={lists().tempsActive}>
@@ -238,7 +239,7 @@ const ParticipantsList: Component<{
       <Show when={lists().tempsDeleted.length > 0}>
         <Accordian
           open={false}
-          title={<span class="text-600">Deleted Temporary Characters</span>}
+          title={<span class="text-600">{t('Deleted Temporary Characters')}</span>}
           class="bg-800"
         >
           <For each={lists().tempsDeleted}>
@@ -260,7 +261,7 @@ const ParticipantsList: Component<{
         show={!!deleting()}
         close={() => setDeleting()}
         confirm={remove}
-        message={`Are you sure you wish to remove "${deleting()?.handle}"?`}
+        message={`${t('Are you sure you wish to remove')} "${deleting()?.handle}"?`}
       />
     </>
   )
@@ -302,12 +303,16 @@ const AddCharacter: Component<{ setView: (view: View) => {} }> = (props) => {
     <>
       <Show
         when={characters().length}
-        fallback={<div class="text-red-500">You don't have any other characters to invite</div>}
+        fallback={
+          <div class="text-red-500">{t("You don't have any other characters to invite")}</div>
+        }
       >
-        <p class="pb-1 text-sm text-[var(--text-700)]">Select a character to add to the chat</p>
+        <p class="pb-1 text-sm text-[var(--text-700)]">
+          {t('Select a character to add to the chat')}
+        </p>
         <Show
           when={!!characters().length}
-          fallback={<p>You don't have any characters available to add</p>}
+          fallback={<p>{t("You don't have any characters available to add")}</p>}
         >
           <CharacterSelectList items={characters()} onSelect={add} />
         </Show>
@@ -327,7 +332,7 @@ const InviteUser: Component<{ setView: (view: View) => {} }> = (props) => {
     const chatId = state.active.chat._id
 
     if (!userId()) {
-      toastStore.warn('No user ID provided')
+      toastStore.warn(t('No user ID provided'))
       return
     }
     return chatStore.inviteUser(chatId, userId(), () => props.setView('list'))
@@ -338,8 +343,8 @@ const InviteUser: Component<{ setView: (view: View) => {} }> = (props) => {
       <form ref={ref} class="flex w-full max-w-full flex-col gap-2">
         <TextInput
           class="text-sm"
-          label="Invite User"
-          helperText="The ID of the user to invite. The user should provide this to you"
+          label={t('Invite User')}
+          helperText={t('The ID of the user to invite. The user should provide this to you')}
           placeholder={`E.g. ${v4()}`}
           onChange={(ev) => setUserId(ev.currentTarget.value)}
         />
@@ -347,7 +352,7 @@ const InviteUser: Component<{ setView: (view: View) => {} }> = (props) => {
         <div class="mt-4">
           <Button class="h-[36px] w-full" onClick={invite}>
             <Mail />
-            Send Invite
+            {t('Send Invite')}
           </Button>
         </div>
       </form>
@@ -372,7 +377,7 @@ const UserParticipant: Component<{
         <div class="ellipsis flex flex-col">
           <div class="ellipsis">{props.member.handle}</div>
           <div class="text-xs italic text-[var(--text-600)]">
-            {props.isOwner ? 'Chat Owner' : 'User'} {props.member.userId.slice(0, 8)}
+            {props.isOwner ? t('Chat Owner') : t('User')} {props.member.userId.slice(0, 8)}
           </div>
         </div>
       </div>
@@ -439,10 +444,10 @@ const CharacterParticipant: Component<{
           </div>
           <div class="text-xs italic text-[var(--text-600)]">
             {props.isMain
-              ? 'Main Character'
+              ? t('Main Character')
               : props.char._id.startsWith('temp-')
-              ? 'Temporary Character'
-              : 'Character'}
+              ? t('Temporary Character')
+              : t('Character')}
           </div>
         </div>
       </div>

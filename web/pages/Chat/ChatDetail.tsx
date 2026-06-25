@@ -51,6 +51,7 @@ import { SendFunc } from './components/InputBar'
 import { MessageVisibility } from './components/Visibility'
 import { PendingMessages } from './components/Pending'
 import { debug } from '/common/debug'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 export { ChatDetail as default }
 
@@ -424,7 +425,7 @@ const ChatDetail: Component = () => {
   return (
     <>
       <ChatMenu ctx={ctx} isOwner={isOwner()} />
-      <Show when={!ctx.appReady}>Agnaistic loading...</Show>
+      <Show when={!ctx.appReady}>{t('Agnaistic loading...')}</Show>
       <ModeDetail
         footer={
           <ChatFooter
@@ -450,13 +451,15 @@ const ChatDetail: Component = () => {
           <div id="chat-messages" class="flex w-full flex-col gap-2">
             <Show when={chats.loaded && ctx.messages.viewing.length < 2 && chats.char?.description}>
               <div class="mb-4 flex flex-col items-center text-[var(--text-500)]">
-                <div class="font-bold">Notes from the creator of {chats.char?.name}</div>
+                <div class="font-bold">
+                  {t('Notes from the creator of')} {chats.char?.name}
+                </div>
                 {descriptionText()}
               </div>
             </Show>
             <Show when={chats.loaded && ctx.messages.viewing.length === 0 && !response.waiting}>
               <div class="flex justify-center gap-2">
-                <Button onClick={generateFirst}>Generate Message</Button>
+                <Button onClick={generateFirst}>{t('Generate Message')}</Button>
               </div>
             </Show>
             {/* Original Slot location */}
@@ -562,8 +565,8 @@ const ChatDetail: Component = () => {
       <ConfirmModal
         message={
           <TitleCard type="rose" class="flex flex-col gap-4">
-            <div class="flex justify-center font-bold">Are you sure?</div>
-            <div>This will fork your conversation from the greeting message.</div>
+            <div class="flex justify-center font-bold">{t('Are you sure?')}</div>
+            <div>{t('This will fork your conversation from the greeting message.')}</div>
           </TitleCard>
         }
         show={chats.opts.modal === 'restart'}

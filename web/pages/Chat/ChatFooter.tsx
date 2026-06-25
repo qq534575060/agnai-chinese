@@ -14,6 +14,7 @@ import { msgStore } from '../../store'
 import InputBar, { SendFunc } from './components/InputBar'
 import { ChatContext } from '/web/store/context'
 import { AppSchema } from '/common/types'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 export const ChatFooter: Component<{
   ctx: ChatContext
@@ -72,7 +73,7 @@ export const ChatFooter: Component<{
     <div class="mb-2 flex w-full flex-col">
       <Show when={isSelfRemoved()}>
         <div class="flex w-full max-w-full justify-center">
-          You have been removed from the conversation
+          {t('You have been removed from the conversation')}
         </div>
       </Show>
       <Show when={props.isOwner && props.ctx.activeBots.length > 1 && !!props.ctx.active?.chat}>

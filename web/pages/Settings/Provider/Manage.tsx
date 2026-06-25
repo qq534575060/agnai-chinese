@@ -28,6 +28,7 @@ import Select from '/web/shared/Select'
 import OpenRouterOauth from '../OpenRouterOauth'
 import { userStore } from '/web/store'
 import { Toggle } from '/web/shared/Toggle'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 export const ManageProvider: Component<{
   onCreated?: (provider: AppSchema.Provider) => void
@@ -61,7 +62,7 @@ export const ManageProvider: Component<{
 
   const categories = createMemo(() => {
     const known = {
-      name: 'Supported Providers',
+      name: t('Supported Providers'),
       options: Object.entries(KNOWN_PROVIDERS)
         .map(([key, info]) => ({
           label: info.name,
@@ -72,7 +73,7 @@ export const ManageProvider: Component<{
     }
 
     const self = {
-      name: 'Local / Self-Host',
+      name: t('Local / Self-Host'),
       options: Object.entries(KNOWN_SELF_HOST)
         .map(([key, info]) => ({
           label: info.name,
@@ -82,7 +83,7 @@ export const ManageProvider: Component<{
     }
 
     const custom = {
-      name: 'Custom',
+      name: t('Custom'),
       options: Object.entries(CUSTOM_PROVIDERS)
         .map(([key, info]) => ({
           label: info.name,
@@ -201,10 +202,10 @@ export const ManageProvider: Component<{
   const label = createMemo(() => {
     const id = provider()
     if (!id) {
-      return 'Provider: Choose a Provider'
+      return t('Provider: Choose a Provider')
     }
     const detail = getSafeProviderDetail(id)
-    return `Provider: ${detail?.detail?.name || id}`
+    return `${t('Provider:')} ${detail?.detail?.name || id}`
   })
 
   const formatOptions = createMemo(() => {
@@ -268,7 +269,7 @@ export const ManageProvider: Component<{
         }
       )
     } catch (ex) {
-      toastStore.error('URL is not valid. Check it and try again')
+      toastStore.error(t('URL is not valid. Check it and try again'))
     }
   }
 
@@ -276,28 +277,28 @@ export const ManageProvider: Component<{
     <RootModal
       show={props.show}
       close={() => props.close('cancel')}
-      title={`${props.provider?._id ? 'Update Provider' : 'Create Provider'}`}
+      title={props.provider?._id ? t('Update Provider') : t('Create Provider')}
       footer={
         <div class="flex w-full justify-between">
           <div>
             <Show when={!!props.provider?._id}>
               <Button schema="red" onClick={onClickDelete}>
-                Delete
+                {t('Delete')}
               </Button>
             </Show>
           </div>
           <div class="flex gap-2">
             <Button schema="secondary" onClick={() => props.close('cancel')} disabled={loading()}>
-              Cancel
+              {t('Cancel')}
             </Button>
             <Button schema="success" onClick={save} disabled={loading() || !provider()}>
-              {props.provider?._id ? 'Update' : 'Create'}
+              {props.provider?._id ? t('Update') : t('Create')}
             </Button>
           </div>
         </div>
       }
     >
-      <div class="text-md">Provide connection details to use an external service</div>
+      <div class="text-md">{t('Provide connection details to use an external service')}</div>
       <div class="flex flex-col gap-2">
         <CustomSelect
           categories={categories()}
@@ -307,14 +308,14 @@ export const ManageProvider: Component<{
         />
 
         <TextInput
-          helperText="Label"
-          placeholder="Custom label for this provider"
+          helperText={t('Label')}
+          placeholder={t('Custom label for this provider')}
           value={name()}
           onChange={(ev) => setName(ev.currentTarget.value)}
         />
 
         <TextInput
-          helperText="URL"
+          helperText={t('URL')}
           placeholder="https://..."
           value={url()}
           onChange={(ev) => {
@@ -327,9 +328,9 @@ export const ManageProvider: Component<{
         <div class="flex gap-2">
           <TextInput
             parentClass="w-full"
-            helperText="API Key"
+            helperText={t('API Key')}
             type="password"
-            placeholder={props.provider?.keySet ? 'Key is set' : 'E.g. sk-...'}
+            placeholder={props.provider?.keySet ? t('Key is set') : t('E.g. sk-...')}
             onChange={(ev) => setKey(ev.currentTarget.value)}
             value={key()}
           />
@@ -345,14 +346,14 @@ export const ManageProvider: Component<{
 
         <Show when={isCustom()}>
           <Toggle
-            helperText="Disable Auto-URL"
+            helperText={t('Disable Auto-URL')}
             value={autourl()}
             onChange={(ev) => setAutourl(ev)}
           />
         </Show>
 
         <div class="flex flex-col">
-          <div class="text-500 text-sm">Request Format</div>
+          <div class="text-500 text-sm">{t('Request Format')}</div>
           <div class="flex gap-1">
             <Select
               items={formatOptions()}
@@ -383,7 +384,7 @@ export const ManageProvider: Component<{
         <Show when={isCustom() || isSelf()}>
           <div class="flex w-full items-center justify-center">
             <Button size="sm" onClick={testConnection} disabled={!url().trim()}>
-              Test Connection
+              {t('Test Connection')}
             </Button>
             <span class="pl-2">
               <Switch>

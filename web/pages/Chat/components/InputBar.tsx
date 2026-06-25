@@ -58,6 +58,7 @@ import { extractReasoning } from '/common/reasoning'
 import { usePresetContext } from '/web/store/preset-context'
 import { debug } from '/common/debug'
 import { Pill } from '/web/shared/Card'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 export type SendFunc = (opts: {
   msg: string
@@ -147,9 +148,9 @@ const InputBar: Component<{
   }
 
   const placeholder = createMemo(() => {
-    if (props.ooc) return 'Send a message... (OOC)'
-    if (ctx.replyAs) return `Send a message to ${ctx.allBots[ctx.replyAs]?.name}...`
-    return `Send a message...`
+    if (props.ooc) return t('Send a message... (OOC)')
+    if (ctx.replyAs) return `${t('Send a message to')} ${ctx.allBots[ctx.replyAs]?.name}...`
+    return t('Send a message...')
   })
 
   const [saveDraft, disposeSaveDraftDebounce] = createDebounce((text: string) => {
@@ -170,7 +171,7 @@ const InputBar: Component<{
     if (!value) return
 
     if (props.swiped) {
-      return toastStore.warn(`Confirm or cancel swiping before sending`)
+      return toastStore.warn(t('Confirm or cancel swiping before sending'))
     }
 
     ref.value = ''
@@ -213,7 +214,7 @@ const InputBar: Component<{
     }, undefined)
 
     if (!lastTextMsg) {
-      toastStore.warn(`Could not play voice: No character message found`)
+      toastStore.warn(t('Could not play voice: No character message found'))
       return
     }
 
@@ -275,12 +276,12 @@ const InputBar: Component<{
       const ext = file.name.split('.').slice(-1)[0].toLowerCase()
       const isAllowed = ALLOWED_TYPES.has(ext)
       if (!isAllowed) {
-        toastStore.warn(`Invalid file type: Must be an image`)
+        toastStore.warn(t('Invalid file type: Must be an image'))
         return
       }
 
       if (file.size > 1024 * 1024 * 1024) {
-        toastStore.warn(`Attachment exceeds size limit (1MB)`)
+        toastStore.warn(t('Attachment exceeds size limit (1MB)'))
         return
       }
 
@@ -304,12 +305,12 @@ const InputBar: Component<{
       <Show when={window.flags.debug}>
         <div class="mb-2 flex justify-center gap-2">
           <Pill small inverse>
-            <b>Leaf:&nbsp;</b>
+            <b>{t('Leaf')}:&nbsp;</b>
             {ctx.active?.chat?.treeLeafId?.slice(0, 4)}
           </Pill>
 
           <Pill small inverse>
-            <b>Cutoff:&nbsp;</b>
+            <b>{t('Cutoff')}:&nbsp;</b>
             {ctx.showMessageCount}
           </Pill>
         </div>
@@ -324,7 +325,7 @@ const InputBar: Component<{
             <TextInput
               class="max-h-[80px] !outline-0"
               parentClass="!p-0.5 text-sm flex flex-1"
-              placeholder="Response hint..."
+              placeholder={t('Response hint...')}
               value={prompt.hint}
               onChange={(ev) =>
                 promptStore.hint({ chatId: props.chat._id, text: ev.currentTarget.value })
@@ -370,7 +371,7 @@ const InputBar: Component<{
           <a
             href="#"
             role="button"
-            aria-label="Open impersonation menu"
+            aria-label={t('Open impersonation menu')}
             class="icon-button"
             onClick={() => pageStore.toggleImpersonate(true)}
           >
@@ -459,17 +460,17 @@ const InputBar: Component<{
               disabled={!ctx.impersonate}
             >
               <MessageCircle size={18} />
-              Respond as Me
+              {t('Respond as Me')}
             </Button>
             <Show when={ctx.activeBots.length > 1}>
-              <div>Auto-reply</div>
+              <div>{t('Auto-reply')}</div>
               <Button
                 schema="secondary"
                 size="sm"
                 onClick={() => setAutoReplyAs('')}
                 disabled={!ctx.replyAs}
               >
-                None
+                {t('None')}
               </Button>
               <For each={ctx.activeBots}>
                 {(char) => (
@@ -492,28 +493,28 @@ const InputBar: Component<{
                 class="flex items-center justify-between"
                 onClick={toggleOoc}
               >
-                <div>Stop Bot Reply</div>
+                <div>{t('Stop Bot Reply')}</div>
                 <Toggle fieldName="ooc" value={props.ooc} onChange={toggleOoc} />
               </Button>
             </Show>
             <Button schema="secondary" class="w-full" onClick={createImage} alignLeft>
-              <ImagePlus size={18} /> Generate Image
+              <ImagePlus size={18} /> {t('Generate Image')}
             </Button>
             <Show when={!!state.lastMsg?.characterId && isOwner()}>
               <Button schema="secondary" class="w-full" onClick={respondAgain} alignLeft>
-                <PlusCircle size={18} /> Respond Again
+                <PlusCircle size={18} /> {t('Respond Again')}
               </Button>
               <Button schema="secondary" class="w-full" onClick={more} alignLeft>
-                <PlusCircle size={18} /> Generate More
+                <PlusCircle size={18} /> {t('Generate More')}
               </Button>
               <Show when={!!props.char?.voice?.service}>
                 <Button schema="secondary" class="w-full" onClick={playVoice} alignLeft>
-                  <Megaphone size={18} /> Play Voice
+                  <Megaphone size={18} /> {t('Play Voice')}
                 </Button>
               </Show>
               <Show when={!!ctx.chat?.scenarioIds?.length && isOwner()}>
                 <Button schema="secondary" class="w-full" onClick={triggerEvent} alignLeft>
-                  <Zap /> Trigger Event
+                  <Zap /> {t('Trigger Event')}
                 </Button>
               </Show>
             </Show>
@@ -527,7 +528,7 @@ const InputBar: Component<{
               />
               <LabelButton for="imageCaption" schema="secondary" class="w-full" alignLeft>
                 <ImageUp size={18} />
-                Attach Image
+                {t('Attach Image')}
               </LabelButton>
             </Show>
           </div>

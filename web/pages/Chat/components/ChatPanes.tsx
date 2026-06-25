@@ -26,6 +26,7 @@ import ChatSettings from '../ChatSettings'
 import ChatMemoryModal from './MemoryModal'
 import { usePaneManager } from '/web/shared/hooks'
 import { usePresetContext } from '/web/store/preset-context'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 export { ChatPanes as default }
 
@@ -112,7 +113,7 @@ const ChatPanes: Component<{}> = (props) => {
     <Show when={pane.showing()}>
       <Switch>
         <Match when={pane.pane() === 'character'}>
-          <Convertible title="Edit Character" close={closeCharEditor} footer={paneFooter()}>
+          <Convertible title={t('Edit Character')} close={closeCharEditor} footer={paneFooter()}>
             <Show when={editId() !== ''}>
               <CreateCharacterForm
                 chat={chats.chat}
@@ -120,7 +121,7 @@ const ChatPanes: Component<{}> = (props) => {
                 footer={setPaneFooter}
                 close={closeCharEditor}
                 temp={editId()?.startsWith('temp-')}
-                onSuccess={() => toastStore.success('Temporary character updated')}
+                onSuccess={() => toastStore.success(t('Temporary character updated'))}
               >
                 <Show when={editableChars().length > 1}>
                   <CharacterSelect
@@ -162,7 +163,7 @@ const ChatPanes: Component<{}> = (props) => {
             footer={paneFooter()}
             title={
               <A class="link" href="/guides/memory">
-                Memory Guide
+                {t('Memory Guide')}
               </A>
             }
           >
@@ -177,15 +178,15 @@ const ChatPanes: Component<{}> = (props) => {
         <Match when={pane.pane() === 'ui'}>
           <Convertible
             close={closePane}
-            title="UI Settings"
-            footer={<Button onClick={() => closePane()}>Close</Button>}
+            title={t('UI Settings')}
+            footer={<Button onClick={() => closePane()}>{t('Close')}</Button>}
           >
             <UISettings />
           </Convertible>
         </Match>
 
         <Match when={pane.pane() === 'chat-settings'}>
-          <Convertible close={closePane} title="Chat Settings" footer={paneFooter()}>
+          <Convertible close={closePane} title={t('Chat Settings')} footer={paneFooter()}>
             <ChatSettings footer={setPaneFooter} close={closePane} />
           </Convertible>
         </Match>

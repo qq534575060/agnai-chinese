@@ -28,6 +28,7 @@ import { ADAPTER_LABELS } from '/common/adapters'
 import { Page } from '/web/Layout'
 import { createStore } from 'solid-js/store'
 import { isDefaultPreset } from '/common/default-preset'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 const options = [{ value: 'attributes', label: 'Attributes' }]
 
@@ -70,8 +71,8 @@ const CreateChatForm: Component<{
   const [selectedId, setSelected] = createSignal<string | undefined>(params.id)
 
   const scenarios = createMemo(() => {
-    if (!scen.length) return [{ value: '', label: 'You have no scenarios' }]
-    return [{ value: '', label: 'None' }, ...scen.map((s) => ({ label: s.name, value: s._id }))]
+    if (!scen.length) return [{ value: '', label: t('You have no scenarios') }]
+    return [{ value: '', label: t('None') }, ...scen.map((s) => ({ label: s.name, value: s._id }))]
   })
 
   createEffect(
@@ -112,10 +113,10 @@ const CreateChatForm: Component<{
     const opts = getPresetOptions(presets, { builtin: true }).filter((pre) => pre.value !== 'chat')
     const combined = [
       {
-        label: 'System Built-in Preset (Horde)',
+        label: t('System Built-in Preset (Horde)'),
         value: AutoPreset.service,
         custom: false,
-        name: 'System Built-in Preset',
+        name: t('System Built-in Preset'),
         provider: 'Horde',
       },
     ].concat(opts)
@@ -124,11 +125,11 @@ const CreateChatForm: Component<{
     if (defaultPreset) {
       const label = ADAPTER_LABELS[defaultPreset.service!]
       combined.unshift({
-        label: `[${label}] Your Default Preset`,
+        label: `[${label}] ${t('Your Default Preset')}`,
         value: '',
         custom: true,
         provider: label,
-        name: 'Your Default Preset',
+        name: t('Your Default Preset'),
       })
     }
 
@@ -189,12 +190,12 @@ const CreateChatForm: Component<{
     <>
       <Button schema="secondary" onClick={props.close}>
         <X />
-        Close
+        {t('Close')}
       </Button>
 
       <Button onClick={onCreate} disabled={!chars.char}>
         <Check />
-        Create
+        {t('Create')}
       </Button>
     </>
   )
@@ -206,23 +207,24 @@ const CreateChatForm: Component<{
   return (
     <Page>
       <PageHeader
-        title={`Create Chat`}
+        title={t('Create Chat')}
         subtitle={
           <div class="flex w-full justify-between">
             <div>{chars.char?.name || ''}</div>
             <Button onClick={onCreate} size="sm">
-              Create
+              {t('Create')}
             </Button>
           </div>
         }
       />
       <form ref={ref}>
         <div class="mb-2 text-sm">
-          Optionally modify some of the conversation context. You can override other aspects of the
-          character's persona from the conversation after it is created.
+          {t(
+            "Optionally modify some of the conversation context. You can override other aspects of the character's persona from the conversation after it is created."
+          )}
         </div>
         <div class="mb-4 text-sm">
-          The information provided here is only applied to the newly created conversation.
+          {t('The information provided here is only applied to the newly created conversation.')}
         </div>
         <div class="flex flex-col gap-3">
           <Show when={!props.charId}>
@@ -232,8 +234,8 @@ const CreateChatForm: Component<{
                 items={chars.chars}
                 value={chars.char}
                 fieldName="character"
-                label="Character"
-                helperText="The conversation's main character"
+                label={t('Character')}
+                helperText={t("The conversation's main character")}
                 onChange={(c) => setSelected(c?._id)}
                 ignoreActive
                 random
@@ -251,18 +253,19 @@ const CreateChatForm: Component<{
 
           <Card>
             <Select
-              label="Chat Mode"
+              label={t('Chat Mode')}
               helperText={
                 <div class="flex flex-col gap-2">
                   <TitleCard>
-                    <b>COMPANION:</b> Everything is permanent. You will not be able to: Edit Chat,
-                    Retry Message, Delete Messages, etc.
+                    {t(
+                      'COMPANION: Everything is permanent. You will not be able to: Edit Chat, Retry Message, Delete Messages, etc.'
+                    )}
                   </TitleCard>
                 </div>
               }
               items={[
-                { label: 'Conversation', value: 'standard' },
-                { label: 'Companion', value: 'companion' },
+                { label: t('Conversation'), value: 'standard' },
+                { label: t('Companion'), value: 'companion' },
               ]}
               value={'standard'}
               onChange={(ev) => setState('mode', ev.value as any)}
@@ -272,20 +275,21 @@ const CreateChatForm: Component<{
           <Card>
             <TextInput
               class="text-sm"
-              label="Conversation Name"
+              label={t('Conversation Name')}
               helperText={
                 <span>
-                  A name for the conversation. This is purely for labelling. <i>(Optional)</i>
+                  {t('A name for the conversation. This is purely for labelling.')}{' '}
+                  <i>{t('(Optional)')}</i>
                 </span>
               }
-              placeholder="Untitled"
+              placeholder={t('Untitled')}
               onChange={(ev) => setState('name', ev.currentTarget.value)}
             />
           </Card>
           <Card>
             <Toggle
-              label="Override Character Definitions"
-              helperText="Overrides will only apply to the newly created conversation."
+              label={t('Override Character Definitions')}
+              helperText={t('Overrides will only apply to the newly created conversation.')}
               value={state.useOverrides}
               onChange={(ev) => setState('useOverrides', ev)}
             />
@@ -294,8 +298,8 @@ const CreateChatForm: Component<{
           <Divider />
 
           <Select
-            label="Scenario"
-            helperText="The scenario to use for this conversation"
+            label={t('Scenario')}
+            helperText={t('The scenario to use for this conversation')}
             items={scenarios()}
             onChange={(ev) => setState('scenarioId', ev.value)}
             disabled={scen.length === 0}
@@ -304,7 +308,7 @@ const CreateChatForm: Component<{
           <Card>
             <TextInput
               isMultiline
-              label="Greeting"
+              label={t('Greeting')}
               class="text-xs"
               disabled={!state.useOverrides}
               value={state.greeting}
@@ -314,7 +318,7 @@ const CreateChatForm: Component<{
           <Card>
             <TextInput
               isMultiline
-              label="Scenario"
+              label={t('Scenario')}
               value={state.scenario}
               class="text-xs"
               disabled={!state.useOverrides}
@@ -325,7 +329,7 @@ const CreateChatForm: Component<{
           <Card>
             <TextInput
               isMultiline
-              label="Sample Chat"
+              label={t('Sample Chat')}
               value={state.sampleChat}
               class="text-xs"
               disabled={!state.useOverrides}
@@ -337,7 +341,7 @@ const CreateChatForm: Component<{
             <Show when={state.personaKind !== 'text'}>
               <Select
                 class="mb-2 text-sm"
-                label="Persona"
+                label={t('Persona')}
                 items={options}
                 value={state.personaKind || 'attributes'}
                 disabled={!state.useOverrides}
@@ -348,8 +352,8 @@ const CreateChatForm: Component<{
             <Show when={state.personaKind === 'text'}>
               <Select
                 class="mb-2 text-sm"
-                label="Persona"
-                items={[{ label: 'Plain text', value: 'text' }]}
+                label={t('Persona')}
+                items={[{ label: t('Plain text'), value: 'text' }]}
                 value={'text'}
                 disabled={!state.useOverrides}
               />

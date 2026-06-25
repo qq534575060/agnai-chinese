@@ -14,6 +14,7 @@ import { markdown } from '/web/shared/markdown'
 import { CustomSelect } from '/web/shared/CustomSelect'
 import { PresetFuncs, ContextPreset } from '/web/store/preset-context'
 import { useProviderList } from './hooks'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 export const PresetProvider: Component<{
   state: ContextPreset
@@ -52,7 +53,7 @@ export const PresetProvider: Component<{
 
     const containsLegacy = list.some((l) => l.value === '')
     if (props.state.service !== 'agnaistic' && !containsLegacy) {
-      list.push({ label: 'Legacy: ' + label, value: '' })
+      list.push({ label: `${t('Legacy:')} ${label}`, value: '' })
     }
 
     return list
@@ -135,15 +136,15 @@ export const PresetProvider: Component<{
     <>
       <div class="flex items-end gap-1">
         <CustomSelect
-          modalTitle="Select Provider"
+          modalTitle={t('Select Provider')}
           size="sm"
           label={
             <>
               <Show when={props.page === 'mode'}>
                 <div class="flex w-full items-center gap-2 pb-1">
-                  <div>Service</div>
+                  <div>{t('Service')}</div>
                   <HelpModal
-                    title="Providers"
+                    title={t('Providers')}
                     cta={
                       <button class="icon-button flex gap-1">
                         <Info size={16} />
@@ -151,15 +152,21 @@ export const PresetProvider: Component<{
                     }
                   >
                     <div class="flex flex-col gap-3">
-                      <p>Providers are used to connect to your preferred AI models.</p>
+                      <p>{t('Providers are used to connect to your preferred AI models.')}</p>
                       <Markdown
-                        text={`Click **\`+ New\`** to create a new provider and fill in the information.`}
+                        text={t(
+                          'Click **`+ New`** to create a new provider and fill in the information.'
+                        )}
                       />
                       <Markdown
-                        text={`**Format**\nIf you prompted to select a **Format** and you are not sure one to use, select \`Chat\`.`}
+                        text={t(
+                          '**Format**\nIf you prompted to select a **Format** and you are not sure one to use, select `Chat`.'
+                        )}
                       />
                       <Markdown
-                        text={`**Important**: Make sure the correct provider is chosen in the dropdown below in your props.state.`}
+                        text={t(
+                          '**Important**: Make sure the correct provider is chosen in the dropdown below in your props.state.'
+                        )}
                       />
                     </div>
                   </HelpModal>
@@ -188,14 +195,14 @@ export const PresetProvider: Component<{
             <div class="flex justify-end gap-2">
               <Button size="sm" onClick={newProvider}>
                 <PlusIcon size={16} />
-                New
+                {t('New')}
               </Button>
             </div>
           }
           footer={
             <>
               <Button schema="secondary" onClick={emitter.emit.close}>
-                Close
+                {t('Close')}
               </Button>
             </>
           }
@@ -209,20 +216,20 @@ export const PresetProvider: Component<{
             <Show when={!showEdit()}>
               <Button size="sm" onClick={editLegacy}>
                 <WifiPen size={16} />
-                Edit
+                {t('Edit')}
               </Button>
             </Show>
 
             <Show when={showEdit()}>
               <Button size="sm" onClick={editProvider}>
                 <WifiPen size={16} />
-                Edit
+                {t('Edit')}
               </Button>
             </Show>
 
             <Button size="sm" onClick={newProvider}>
               <PlusIcon size={16} />
-              New
+              {t('New')}
             </Button>
           </Show>
         </CustomSelect>
@@ -299,7 +306,7 @@ const EditConnectionDetails: Field<{ show: boolean; close: () => void }> = (prop
     ]
 
     const options = formats.map((id) => ({ label: FORMAT_LABEL[id], value: id as string }))
-    options.unshift({ label: 'None', value: '' })
+    options.unshift({ label: t('None'), value: '' })
     return options
   })
 
@@ -307,14 +314,14 @@ const EditConnectionDetails: Field<{ show: boolean; close: () => void }> = (prop
     <RootModal
       show={props.show}
       close={props.close}
-      title="Edit Connection Details"
+      title={t('Edit Connection Details')}
       footer={
         <>
           <Button schema="secondary" onClick={cancel}>
-            Cancel
+            {t('Cancel')}
           </Button>
           <Button schema="primary" onClick={accept}>
-            Accept
+            {t('Accept')}
           </Button>
         </>
       }
@@ -322,12 +329,12 @@ const EditConnectionDetails: Field<{ show: boolean; close: () => void }> = (prop
       <div class="flex flex-col gap-2">
         <Select
           fieldName="service"
-          label="AI Service"
+          label={t('AI Service')}
           helperText={
             <>
               <Show when={!props.state.service}>
                 <p class="text-red-500">
-                  Warning! Your preset does not currently have a service set.
+                  {t('Warning! Your preset does not currently have a service set.')}
                 </p>
               </Show>
             </>
@@ -339,8 +346,8 @@ const EditConnectionDetails: Field<{ show: boolean; close: () => void }> = (prop
 
         <Select
           fieldName="thirdPartyFormat"
-          label="Third-Party Format"
-          helperText="Controls how requests are sent"
+          label={t('Third-Party Format')}
+          helperText={t('Controls how requests are sent')}
           items={thirdPartyFormats()}
           value={props.state.thirdPartyFormat}
           hide={props.state.service !== 'kobold'}
@@ -370,9 +377,9 @@ const ThirdPartyUrl: Field = (props) => {
   return (
     <TextInput
       fieldName="thirdPartyUrl"
-      label="URL"
-      helperMarkdown="API URL for **third-party** or **self-hosted** services"
-      placeholder="E.g. https://some-tunnel-url.loca.lt"
+      label={t('URL')}
+      helperMarkdown={t('API URL for **third-party** or **self-hosted** services')}
+      placeholder={t('E.g. https://some-tunnel-url.loca.lt')}
       value={props.state.thirdPartyUrl || ''}
       disabled={props.state.disabled}
       hide={
@@ -394,22 +401,22 @@ const ThirdPartyKey: Field = (props) => {
         fieldName="thirdPartyKey"
         label={
           <div class="mt-1 flex items-center gap-4">
-            <div>API Key</div>
+            <div>{t('API Key')}</div>
             <Show when={props.state._id}>
               <Button
                 size="pill"
                 onClick={() => getStore('presets').deleteUserPresetKey(props.state._id!)}
               >
-                Remove Key
+                {t('Remove Key')}
               </Button>
             </Show>
           </div>
         }
-        helperText="Never enter your official OpenAI, Claude, Mistral keys here."
+        helperText={t('Never enter your official OpenAI, Claude, Mistral keys here.')}
         value={props.state.thirdPartyKey}
         disabled={props.state.disabled}
         type="password"
-        placeholder={props.state.thirdPartyKeySet ? 'Key is set' : 'E.g. sk-...'}
+        placeholder={props.state.thirdPartyKeySet ? t('Key is set') : t('E.g. sk-...')}
         // hide={props.hides.thirdPartyKey}
         onChange={(ev) => props.setters.setState('thirdPartyKey', ev.currentTarget.value)}
       />

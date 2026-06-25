@@ -6,6 +6,7 @@ import { characterStore, chatStore, msgStore } from '../../store'
 import { ChatTree } from '/common/chat'
 import { useAppContext } from '/web/store/context'
 import { downloadJson } from '/web/shared/util'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 const ChatExport: Component<{ show: boolean; close: () => void }> = (props) => {
   const [ctx] = useAppContext()
@@ -56,16 +57,16 @@ const ChatExport: Component<{ show: boolean; close: () => void }> = (props) => {
   const Footer = (
     <>
       <Button schema="secondary" onClick={props.close}>
-        Close
+        {t('Close')}
       </Button>
 
       <Button onClick={download}>
-        <Download /> Download
+        <Download /> {t('Download')}
       </Button>
     </>
   )
 
-  return <Modal show={props.show} close={props.close} title="Export Chat" footer={Footer}></Modal>
+  return <Modal show={props.show} close={props.close} title={t('Export Chat')} footer={Footer}></Modal>
 }
 
 export default ChatExport

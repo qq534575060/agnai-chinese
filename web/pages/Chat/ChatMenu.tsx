@@ -25,6 +25,7 @@ import { PresetProvider } from '../Settings/Provider'
 import { createEmitter } from '/web/shared/util'
 import { usePresetContext } from '/web/store/preset-context'
 import { getStore } from '/web/store/create'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 type NavProps = {
   ctx: ChatContext
@@ -50,11 +51,11 @@ export const ChatMenu: Component<{
   }
 
   const adapterLabel = createMemo(() => {
-    if (!preset.current._id) return `None`
+    if (!preset.current._id) return t('None')
 
     const suffix = preset.current.name
 
-    return suffix || 'Unnamed Preset'
+    return suffix || t('Unnamed Preset')
   })
 
   useSubNav({
@@ -102,7 +103,7 @@ const ChatNav: Component<NavProps> = (props) => {
 
       <Nav.DoubleItem>
         <Nav.Item class="min-h-8" href={`/character/list`}>
-          <ChevronLeft size={16} /> Characters
+          <ChevronLeft size={16} /> {t('Characters')}
         </Nav.Item>
 
         <Nav.Item
@@ -110,27 +111,27 @@ const ChatNav: Component<NavProps> = (props) => {
           href={`/character/${props.ctx.char?._id}/chats`}
           disabled={!props.ctx.char?._id}
         >
-          <ChevronLeft size={16} /> Chats
+          <ChevronLeft size={16} /> {t('Chats')}
         </Nav.Item>
       </Nav.DoubleItem>
 
       <Nav.Item onClick={() => props.togglePane('participants')}>
-        <Users size={size} /> Participants
+        <Users size={size} /> {t('Participants')}
       </Nav.Item>
 
       <Nav.Item onClick={() => props.togglePane('chat-settings')}>
-        <Settings size={size} /> Edit Chat
+        <Settings size={size} /> {t('Edit Chat')}
       </Nav.Item>
 
       <Nav.Item onClick={() => props.togglePane('preset')}>
         <Sliders class="min-w-[24px]" width={'24px'} size={size} />
-        <span class="min-w-fit">Preset </span>
+        <span class="min-w-fit">{t('Preset')} </span>
         <span class="text-500 ellipsis text-xs italic">{props.adapterLabel}</span>
       </Nav.Item>
 
       <Show when={isOwner()}>
         <Nav.Item onClick={() => props.togglePane('memory')}>
-          <Book size={size} /> Memory
+          <Book size={size} /> {t('Memory')}
         </Nav.Item>
       </Show>
 
@@ -140,7 +141,7 @@ const ChatNav: Component<NavProps> = (props) => {
 
       <Show when={isOwner()}>
         <Nav.Item onClick={() => props.setModal('graph')} class="tour-chat-graph">
-          <Map size={size} /> Chat Graph
+          <Map size={size} /> {t('Chat Graph')}
         </Nav.Item>
       </Show>
 
@@ -157,15 +158,15 @@ const ChatNav: Component<NavProps> = (props) => {
       <div class="flex flex-wrap justify-center gap-1 text-sm">
         <Nav.Item
           onClick={() => pageStore.settings(true)}
-          ariaLabel="Open settings page"
-          tooltip="Site Settings"
+          ariaLabel={t('Open settings page')}
+          tooltip={t('Site Settings')}
         >
           <Settings size={size} aria-hidden="true" />
         </Nav.Item>
         <Nav.Item
           onClick={openMessageImages}
-          ariaLabel="Image Generation"
-          tooltip="Image Generation"
+          ariaLabel={t('Image Generation')}
+          tooltip={t('Image Generation')}
         >
           <ImagePlus size={size} aria-hidden="true" />
         </Nav.Item>
@@ -176,13 +177,13 @@ const ChatNav: Component<NavProps> = (props) => {
         >
           <Image size={size} aria-hidden="true" />
         </Nav.Item>*/}
-        <Nav.Item onClick={() => props.setModal('export')} tooltip="Download Chat">
+        <Nav.Item onClick={() => props.setModal('export')} tooltip={t('Download Chat')}>
           <Download size={size} />
         </Nav.Item>
-        <Nav.Item onClick={() => props.setModal('restart')} tooltip="Restart Chat">
+        <Nav.Item onClick={() => props.setModal('restart')} tooltip={t('Restart Chat')}>
           <RotateCcw size={size} />
         </Nav.Item>
-        <Nav.Item onClick={() => props.setModal('delete')} tooltip="Delete Chat">
+        <Nav.Item onClick={() => props.setModal('delete')} tooltip={t('Delete Chat')}>
           <Trash size={size} />
         </Nav.Item>
 

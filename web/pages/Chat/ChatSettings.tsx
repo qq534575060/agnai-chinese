@@ -40,6 +40,7 @@ import { FormLabel } from '/web/shared/FormLabel'
 import { useParticipantList } from './util'
 import { CharacterDefaultVisibility, VisibilityToggle } from './components/Visibility'
 import { neat } from '/common/util'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 const formatOptions = [
   { value: 'attributes', label: 'Attributes' },
@@ -273,14 +274,14 @@ const ChatSettings: Component<{
       <div class="flex w-full justify-between gap-2">
         <div>
           <Button schema="secondary" onClick={revert}>
-            Reset Character
+            {t('Reset Character')}
           </Button>
         </div>
         <div class="flex gap-2">
           <Button schema="secondary" onClick={props.close}>
-            Cancel
+            {t('Cancel')}
           </Button>
-          <Button onClick={onSave}>Save</Button>
+          <Button onClick={onSave}>{t('Save')}</Button>
         </div>
       </div>
     </>
@@ -297,13 +298,13 @@ const ChatSettings: Component<{
       <Card>
         <Select
           fieldName="imageSource"
-          label="Image Source"
-          helperText={<>Which settings to use when generating images for this chat</>}
+          label={t('Image Source')}
+          helperText={<>{t('Which settings to use when generating images for this chat')}</>}
           items={[
-            { label: 'Main Character', value: 'main-character' },
-            { label: 'Last Character to Speak', value: 'last-character' },
-            { label: 'Chat Settings', value: 'chat' },
-            { label: 'App Settings', value: 'settings' },
+            { label: t('Main Character'), value: 'main-character' },
+            { label: t('Last Character to Speak'), value: 'last-character' },
+            { label: t('Chat Settings'), value: 'chat' },
+            { label: t('App Settings'), value: 'settings' },
           ]}
           value={edit.imageSource}
           onChange={(ev) => setEdit('imageSource', ev.value as any)}
@@ -316,26 +317,28 @@ const ChatSettings: Component<{
             fieldName="chatBackground"
             label={
               <div class="flex items-center justify-between gap-1">
-                Background Image{' '}
+                {t('Background Image')}{' '}
                 <div class="flex items-center gap-1">
                   <Show when={state.active?.chat?.background}>
                     <Select
                       parentClass="text-xs"
                       items={[
-                        { label: 'Auto', value: 'auto' },
-                        { label: 'Cover', value: 'cover' },
-                        { label: 'Contain', value: 'contain' },
+                        { label: t('Auto'), value: 'auto' },
+                        { label: t('Cover'), value: 'cover' },
+                        { label: t('Contain'), value: 'contain' },
                       ]}
                       onChange={(next) => saveLocalSettings({ bgFormat: next.value as any })}
                     />
                     <Button size="sm" schema="red" onClick={() => chatStore.removeChatBackground()}>
-                      Remove
+                      {t('Remove')}
                     </Button>
                   </Show>
                 </div>
               </div>
             }
-            helperText="The image will be stored on your current device and not available on other devices"
+            helperText={t(
+              'The image will be stored on your current device and not available on other devices'
+            )}
             onUpdate={saveBackgroundImage}
             accept="image/png,image/jpeg,image/apng,image/gif,image/webp"
           />
@@ -346,20 +349,21 @@ const ChatSettings: Component<{
         <Card>
           <Select
             fieldName="mode"
-            label="Chat Mode"
+            label={t('Chat Mode')}
             helperText={
               <>
                 <Show when={state.active?.chat?.mode !== 'companion' && edit.mode === 'companion'}>
                   <TitleCard type="orange">
-                    Warning! Switching to COMPANION mode is irreversible! You will no longer be able
-                    to: retry messages, delete chats, edit chat settings.
+                    {t(
+                      'Warning! Switching to COMPANION mode is irreversible! You will no longer be able to: retry messages, delete chats, edit chat settings.'
+                    )}
                   </TitleCard>
                 </Show>
               </>
             }
             items={[
-              { label: 'Conversation', value: 'standard' },
-              { label: 'Companion', value: 'companion' },
+              { label: t('Conversation'), value: 'standard' },
+              { label: t('Companion'), value: 'companion' },
             ]}
             value={edit.mode}
             onChange={(ev) => setEdit('mode', ev.value as any)}
@@ -374,14 +378,15 @@ const ChatSettings: Component<{
           onChange={(ev) => setEdit('name', ev.currentTarget.value)}
           label={
             <>
-              Chat name{' '}
+              {t('Chat name')}{' '}
               <div
                 onClick={() =>
                   responseStore.chatQuery(
                     {
-                      question:
-                        'Generate one name for this conversation. Reply only with the one chat name only and no other formatting or commentary.',
-                      assistant: 'Conversation Name Generator',
+                      question: t(
+                        'Generate one name for this conversation. Reply only with the one chat name only and no other formatting or commentary.'
+                      ),
+                      assistant: t('Conversation Name Generator'),
                     },
                     (msg, state) => {
                       if (state !== 'partial' && state !== 'done') return
@@ -401,16 +406,18 @@ const ChatSettings: Component<{
         <Toggle
           value={edit.useOverrides}
           onChange={(ev) => setEdit('useOverrides', ev)}
-          label="Override Character Definitions"
-          helperText="Overrides apply to this chat only. If you want to edit the original character, open the 'Character' link in the Chat Menu instead."
+          label={t('Override Character Definitions')}
+          helperText={t(
+            "Overrides apply to this chat only. If you want to edit the original character, open the 'Character' link in the Chat Menu instead."
+          )}
         />
       </Card>
 
       <Show when={scenarios().length > 1}>
         <Card>
           <Select
-            label="Scenario"
-            helperText="The scenario to use for this conversation"
+            label={t('Scenario')}
+            helperText={t('The scenario to use for this conversation')}
             items={scenarios()}
             value={edit.scenarioId}
             onChange={(ev) => setEdit('scenarioId', ev.value)}
@@ -420,8 +427,8 @@ const ChatSettings: Component<{
             <TagInput
               availableTags={[]}
               onSelect={(tags) => setEdit('scenarioStates', tags)}
-              label="The current state of the scenario"
-              helperText="What flags have been set in the chat by the scenario so far"
+              label={t('The current state of the scenario')}
+              helperText={t('What flags have been set in the chat by the scenario so far')}
               value={edit.scenarioStates}
             />
           </Show>
@@ -434,16 +441,23 @@ const ChatSettings: Component<{
             class="text-sm"
             isMultiline
             value={edit.description}
-            helperText="A description, label, or notes for your character: Used for AI field generation. Does not change your character's behavior."
+            helperText={t(
+              "A description, label, or notes for your character: Used for AI field generation. Does not change your character's behavior."
+            )}
             onChange={(ev) => setEdit('description', ev.currentTarget.value)}
-            label="Description"
+            label={t('Description')}
           />
 
           <TextInput
             class="text-sm"
             isMultiline
             label={
-              <GenLabel generating={generating()} label="Greeting" prop="greeting" gen={genField} />
+              <GenLabel
+                generating={generating()}
+                label={t('Greeting')}
+                prop="greeting"
+                gen={genField}
+              />
             }
             value={edit.greeting}
             onChange={(ev) => setEdit('greeting', ev.currentTarget.value)}
@@ -455,7 +469,12 @@ const ChatSettings: Component<{
             value={edit.scenario}
             onChange={(ev) => setEdit('scenario', ev.currentTarget.value)}
             label={
-              <GenLabel generating={generating()} label="Scenario" prop="scenario" gen={genField} />
+              <GenLabel
+                generating={generating()}
+                label={t('Scenario')}
+                prop="scenario"
+                gen={genField}
+              />
             }
           />
 
@@ -465,7 +484,7 @@ const ChatSettings: Component<{
             label={
               <GenLabel
                 generating={generating()}
-                label="Sample Chat"
+                label={t('Sample Chat')}
                 prop="sampleChat"
                 gen={genField}
               />
@@ -476,21 +495,21 @@ const ChatSettings: Component<{
 
           <TextInput
             class="text-sm"
-            label="Character System Prompt"
+            label={t('Character System Prompt')}
             value={edit.systemPrompt}
             onChange={(ev) => setEdit('systemPrompt', ev.currentTarget.value)}
           />
 
           <TextInput
             class="text-sm"
-            label="Character Post-History Instructions"
+            label={t('Character Post-History Instructions')}
             value={edit.postHistoryInstructions}
             onChange={(ev) => setEdit('postHistoryInstructions', ev.currentTarget.value)}
           />
 
           <Select
             fieldName="schema"
-            label="Persona"
+            label={t('Persona')}
             items={personaFormats()}
             value={edit.personaKind}
             onChange={(ev) => setEdit('personaKind', ev.value as any)}
@@ -511,7 +530,7 @@ const ChatSettings: Component<{
       <Divider />
 
       <FormLabel
-        label="Default Message Visibility"
+        label={t('Default Message Visibility')}
         helperMarkdown={neat`
           When the Message has not had visibility edited.
           The _most specific_ takes precendence:
@@ -523,20 +542,20 @@ const ChatSettings: Component<{
         <div class="flex flex-wrap gap-2">
           <Pill small inverse>
             <Check size={16} color="var(--success-500)" class="flex items-center gap-1" />
-            Visible
+            {t('Visible')}
           </Pill>
           <Pill small inverse>
             <X size={16} color="var(--error-500)" class="flex items-center gap-1" />
-            Invisible
+            {t('Invisible')}
           </Pill>
           <Pill small inverse class="flex items-center gap-1">
             <Minus size={16} />
-            Not Set
+            {t('Not Set')}
           </Pill>
         </div>
 
         <div>
-          <strong>Defaults for All Messages</strong>
+          <strong>{t('Defaults for All Messages')}</strong>
         </div>
         <div class="flex flex-wrap gap-2">
           <For each={lists().chars}>

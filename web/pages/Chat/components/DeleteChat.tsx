@@ -5,6 +5,7 @@ import Button from '../../../shared/Button'
 import Modal from '../../../shared/Modal'
 import { chatStore } from '../../../store'
 import { useNavigate } from '@solidjs/router'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 const DeleteChatModal: Component<{
   chat?: AppSchema.Chat
@@ -24,23 +25,23 @@ const DeleteChatModal: Component<{
   return (
     <Modal
       show={props.show && !!props.chat}
-      title="Confirm Deletion"
+      title={t('Confirm Deletion')}
       close={props.close}
       footer={
         <>
           <Button schema="secondary" onClick={props.close}>
             <X />
-            Cancel
+            {t('Cancel')}
           </Button>
 
           <Button schema="red" onClick={onDelete}>
-            <Trash /> Delete
+            <Trash /> {t('Delete')}
           </Button>
         </>
       }
     >
       <div class="flex flex-col items-center gap-4">
-        <div>Are you sure you wish to delete this chat?</div>
+        <div>{t('Are you sure you wish to delete this chat?')}</div>
         <div class="flex justify-center gap-4">{props.chat!.name}</div>
       </div>
     </Modal>

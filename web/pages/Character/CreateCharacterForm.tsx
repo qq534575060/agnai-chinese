@@ -45,6 +45,7 @@ import { AdvancedOptions } from './form/AdvancedOptions'
 import { AvatarField } from './form/AvatarField'
 import { usePresetContext } from '/web/store/preset-context'
 import { PageSpinner } from '/web/shared/Loading'
+import { t } from '/web/shared/AdminChineseLocalizer'
 // import { randomElement } from '/common/util'
 
 const formatOptions = [
@@ -184,7 +185,7 @@ export const CreateCharacterForm: Component<{
       editor.receiveAvatar(file)
 
       setImage(imageData)
-      toastStore.success(`Successfully downloaded from Character Hub`)
+      toastStore.success(t('Successfully downloaded from Character Hub'))
     } catch (ex: any) {
       toastStore.error(`Character Hub download failed: ${ex.message}`)
     }
@@ -198,7 +199,7 @@ export const CreateCharacterForm: Component<{
         if (!state.edit && srcId()) return
 
         if (srcId() === 'undefined') {
-          toastStore.error(`Character load failed (ID missing?) - Try again or contact support`)
+          toastStore.error(t('Character load failed (ID missing?) - Try again or contact support'))
           return
         }
 
@@ -307,11 +308,11 @@ export const CreateCharacterForm: Component<{
     <>
       <Button onClick={cancel} schema="secondary">
         <X />
-        {props.close ? 'Close' : 'Cancel'}
+        {props.close ? t('Close') : t('Cancel')}
       </Button>
       <Button onClick={onSubmit} disabled={state.creating}>
         <Save />
-        {props.editId && !forceNew() ? 'Update' : 'Create'}
+        {props.editId && !forceNew() ? t('Update') : t('Create')}
       </Button>
     </>
   )
@@ -321,7 +322,7 @@ export const CreateCharacterForm: Component<{
   )
 
   const tabs = useTabs(
-    ['Persona', 'Voice', 'Images', 'Advanced'],
+    [t('Persona'), t('Voice'), t('Images'), t('Advanced')],
     isNaN(+(search.char_tab || '0')) ? 0 : +(search.char_tab || '0')
   )
 
@@ -330,8 +331,8 @@ export const CreateCharacterForm: Component<{
       <Show when={!props.noTitle && (isPage || paneOrPopup() === 'pane')}>
         <PageHeader
           title={`${
-            forceNew() ? 'Create' : props.editId ? 'Edit' : props.duplicateId ? 'Copy' : 'Create'
-          } a Character`}
+            forceNew() ? t('Create') : props.editId ? t('Edit') : props.duplicateId ? t('Copy') : t('Create')
+          } ${t('a Character')}`}
           subtitle={
             <>
               <div class="whitespace-normal">
@@ -340,7 +341,7 @@ export const CreateCharacterForm: Component<{
                 </em>
               </div>
               <Button size="pill" class="w-fit" onClick={() => startTour('char', true)}>
-                AI Character Generation Guide
+                {t('AI Character Generation Guide')}
               </Button>
             </>
           }
@@ -389,14 +390,14 @@ export const CreateCharacterForm: Component<{
                 }}
                 class="tour-preset"
               >
-                <SlidersVertical size={24} /> Preset
+                <SlidersVertical size={24} /> {t('Preset')}
               </Button>
               <Button size="sm" onClick={() => setImport(true)}>
-                <Import /> Import
+                <Import /> {t('Import')}
               </Button>
 
               <Button size="sm" onClick={() => setConverted(editor.convert())}>
-                <Download /> Export
+                <Download /> {t('Export')}
               </Button>
 
               <Show when={state.edit}>
@@ -408,7 +409,7 @@ export const CreateCharacterForm: Component<{
                   }}
                 >
                   <Plus />
-                  New
+                  {t('New')}
                 </Button>
               </Show>
 
@@ -418,7 +419,7 @@ export const CreateCharacterForm: Component<{
                   schema="warning"
                   onClick={() => {
                     pageStore.openConfirm({
-                      message: 'Are you sure you wish to clear the editor?',
+                      message: t('Are you sure you wish to clear the editor?'),
                       onConfirm: clearEditor,
                     })
                   }}
@@ -437,12 +438,12 @@ export const CreateCharacterForm: Component<{
               tabs={tabs.tabs()}
             />
 
-            <div class="flex flex-col gap-2" classList={{ hidden: tabs.current() !== 'Persona' }}>
+            <div class="flex flex-col gap-2" classList={{ hidden: tabs.current() !== t('Persona') }}>
               <Card class="tour-prefields">
                 <ButtonInput
                   fieldName="name"
                   required
-                  label="Character Name"
+                  label={t('Character Name')}
                   placeholder=""
                   value={editor.state.name}
                   parentClass="pb-2"
@@ -454,12 +455,11 @@ export const CreateCharacterForm: Component<{
                 </ButtonInput>
 
                 <FormLabel
-                  label="Description / Creator's notes"
+                  label={t("Description / Creator's notes")}
                   helperText={
                     <div class="flex flex-col">
                       <span>
-                        A description, label, or notes for your character. This is will not
-                        influence your character in any way.
+                        {t('A description, label, or notes for your character. This is will not influence your character in any way.')}
                       </span>
                     </div>
                   }
@@ -485,8 +485,8 @@ export const CreateCharacterForm: Component<{
                   availableTags={tagState.tags.map((t) => t.tag)}
                   value={editor.state.tags}
                   fieldName="_tags"
-                  label="Tags"
-                  helperText="Used to help you organize and filter your characters."
+                  label={t('Tags')}
+                  helperText={t('Used to help you organize and filter your characters.')}
                   onSelect={(tags) => editor.update({ tags })}
                 />
               </Card>
@@ -507,10 +507,10 @@ export const CreateCharacterForm: Component<{
                   label={
                     <>
                       <Regenerate field={'scenario'} editor={editor} class="tour-gen-field" />
-                      Scenario{' '}
+                      {t('Scenario')}{' '}
                     </>
                   }
-                  helperText="The current circumstances and context of the conversation and the characters."
+                  helperText={t('The current circumstances and context of the conversation and the characters.')}
                   placeholder="E.g. {{char}} is in their office working. {{user}} opens the door and walks in."
                   value={editor.state.scenario}
                   onChange={(ev) => editor.update('scenario', ev.currentTarget.value)}
@@ -527,17 +527,16 @@ export const CreateCharacterForm: Component<{
                         <Show when={editor.state.personaKind === 'text'}>
                           <Regenerate field={'persona'} editor={editor} />
                         </Show>
-                        Personality
+                        {t('Personality')}
                       </div>
                     }
                     helperText={
                       <>
-                        <p>If you do not know what this mean, you can leave this as-is.</p>
+                        <p>{t('If you do not know what this mean, you can leave this as-is.')}</p>
                         <p class="font-bold">
-                          WARNING: "Plain Text" and "Non-Plain Text" schemas are not compatible.
-                          Changing between them will cause data loss.
+                          {t('WARNING: "Plain Text" and "Non-Plain Text" schemas are not compatible. Changing between them will cause data loss.')}
                         </p>
-                        <p>Format to use for the character's format</p>
+                        <p>{t("Format to use for the character's format")}</p>
                       </>
                     }
                   />
@@ -565,10 +564,10 @@ export const CreateCharacterForm: Component<{
                   label={
                     <>
                       <Regenerate field={'greeting'} editor={editor} />
-                      Greeting{' '}
+                      {t('Greeting')}{' '}
                     </>
                   }
-                  helperText="The first message from your character. It is recommended to provide a lengthy first message to encourage the character to give longer responses."
+                  helperText={t('The first message from your character. It is recommended to provide a lengthy first message to encourage the character to give longer responses.')}
                   placeholder={
                     "E.g. *I smile as you walk into the room* Hello, {{user}}! I can't believe it's lunch time already! Where are we going?"
                   }
@@ -589,13 +588,12 @@ export const CreateCharacterForm: Component<{
                   label={
                     <>
                       <Regenerate field={'sampleChat'} editor={editor} />
-                      Sample Conversation{' '}
+                      {t('Sample Conversation')}{' '}
                     </>
                   }
                   helperText={
                     <span>
-                      Example chat between you and the character. This section is very important for
-                      teaching your character should speak.
+                      {t('Example chat between you and the character. This section is very important for teaching your character should speak.')}
                     </span>
                   }
                   placeholder="{{char}}: *smiles and waves back* Hello! I'm so happy you're here!"
@@ -606,14 +604,14 @@ export const CreateCharacterForm: Component<{
               </Card>
             </div>
 
-            <div class="flex flex-col gap-2" classList={{ hidden: tabs.current() !== 'Voice' }}>
+            <div class="flex flex-col gap-2" classList={{ hidden: tabs.current() !== t('Voice') }}>
               <Card class="flex flex-col gap-3">
-                <h4 class="text-md font-bold">Voice</h4>
+                <h4 class="text-md font-bold">{t('Voice')}</h4>
                 <Toggle
                   fieldName="voiceDisabled"
                   value={editor.state.voiceDisabled}
-                  label="Disable Character's Voice"
-                  helperText="Toggle on to disable this character from automatically speaking"
+                  label={t("Disable Character's Voice")}
+                  helperText={t('Toggle on to disable this character from automatically speaking')}
                   onChange={(ev) => editor.update('voiceDisabled', ev)}
                 />
 
@@ -625,8 +623,8 @@ export const CreateCharacterForm: Component<{
 
                 <Select
                   fieldName="culture"
-                  label="Language"
-                  helperText={`The language this character speaks and understands.${
+                  label={t('Language')}
+                  helperText={`${t('The language this character speaks and understands.')}${
                     editor.state.culture.startsWith('en') ?? true
                       ? ''
                       : ' NOTE: You need to also translate the preset gaslight to use a non-english language.'
@@ -640,17 +638,17 @@ export const CreateCharacterForm: Component<{
 
             <div
               class={`flex flex-col gap-2`}
-              classList={{ hidden: tabs.current() !== 'Advanced' }}
+              classList={{ hidden: tabs.current() !== t('Advanced') }}
             >
               <AdvancedOptions editor={editor} />
             </div>
 
             <div
               class={`flex items-center gap-2 text-center`}
-              classList={{ hidden: tabs.current() !== 'Images' }}
+              classList={{ hidden: tabs.current() !== t('Images') }}
             >
-              Image Settings have moved: Click the <Image size={16} />
-              in the main menu
+              {t('Image Settings have moved: Click the')} <Image size={16} />
+              {t('in the main menu')}
             </div>
 
             <Show when={!props.close}>
@@ -695,14 +693,14 @@ export const CreateCharacterForm: Component<{
 
       <Show when={openPreset()}>
         <RootModal
-          title="Update Preset"
+          title={t('Update Preset')}
           show
           close={() => setOpenPreset(false)}
           maxWidth="half"
           maxHeight
           footer={presetFooter()}
         >
-          <sub>This preset used for character generation</sub>
+          <sub>{t('This preset used for character generation')}</sub>
           <ModeGenSettings
             presetId={user.user?.chargenPreset || user.user?.defaultPreset}
             preset={preset.current}
