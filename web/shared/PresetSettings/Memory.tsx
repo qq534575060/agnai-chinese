@@ -1,6 +1,7 @@
 import { Component } from 'solid-js'
 import RangeInput from '../RangeInput'
 import { PresetTabProps } from '/web/store/preset-context'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 export const MemorySettings: Component<PresetTabProps> = (props) => {
   return (
@@ -8,8 +9,8 @@ export const MemorySettings: Component<PresetTabProps> = (props) => {
       <div class="flex flex-col gap-2">
         <RangeInput
           fieldName="memoryContextLimit"
-          label="Memory: Context Limit"
-          helperText="The maximum context budget (in tokens) for the memory book."
+          label={t('Memory: Context Limit')}
+          helperText={t('The maximum context budget (in tokens) for the memory book.')}
           min={1}
           max={2000}
           step={1}
@@ -20,8 +21,8 @@ export const MemorySettings: Component<PresetTabProps> = (props) => {
 
         <RangeInput
           fieldName="memoryChatEmbedLimit"
-          label="Memory: Long-term Memory Context Budget"
-          helperText="If available: The maximum context budget (in tokens) for long-term memory."
+          label={t('Memory: Long-term Memory Context Budget')}
+          helperText={t('If available: The maximum context budget (in tokens) for long-term memory.')}
           min={1}
           max={10000}
           step={1}
@@ -32,8 +33,8 @@ export const MemorySettings: Component<PresetTabProps> = (props) => {
 
         <RangeInput
           fieldName="memoryUserEmbedLimit"
-          label="Memory: Embedding Context Budget"
-          helperText="If available: The maximum context budget (in tokens) for document embeddings."
+          label={t('Memory: Embedding Context Budget')}
+          helperText={t('If available: The maximum context budget (in tokens) for document embeddings.')}
           min={1}
           max={10000}
           step={1}
@@ -44,8 +45,8 @@ export const MemorySettings: Component<PresetTabProps> = (props) => {
 
         <RangeInput
           fieldName="memoryDepth"
-          label="Memory: Chat History Depth"
-          helperText="Number of messages to scan in chat history to scan for memory book keywords."
+          label={t('Memory: Chat History Depth')}
+          helperText={t('Number of messages to scan in chat history to scan for memory book keywords.')}
           min={1}
           max={100}
           step={1}

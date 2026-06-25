@@ -8,37 +8,41 @@ import Sortable, { SortItem } from '../Sortable'
 import { A } from '@solidjs/router'
 import { inverseSamplerServiceMap, samplerServiceMap } from '/common/sampler-order'
 import { PresetFuncs, PresetTabProps, ContextPreset } from '/web/store/preset-context'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 export const ToggleSettings: Component<PresetTabProps> = (props) => {
   return (
     <div class="flex flex-col gap-4" classList={{ hidden: props.tab !== 'Toggles' }}>
       <Card class="flex flex-col gap-4" bg="bg-500">
         <Toggle
-          label="Skip Chat Role Merges"
-          helperText="Chat completions: When enabled, do not collapse repeated roles into a single message"
+          label={t('Skip Chat Role Merges')}
+          helperText={t(
+            'Chat completions: When enabled, do not collapse repeated roles into a single message'
+          )}
           value={props.state.skipRoleMerging}
           onChange={(ev) => props.setters.setState('skipRoleMerging', ev)}
         />
 
         <Toggle
-          label="Ensure Last Role is User"
-          helperMarkdown={`Chat completions: When enabled, the \`{{post}}\` amble will be sent as a USER role, instead of ASSISTANT.
-          Fixes DeepSeek 3.1 issues.`}
+          label={t('Ensure Last Role is User')}
+          helperMarkdown={t(
+            'Chat completions: When enabled, the `{{post}}` amble will be sent as a USER role, instead of ASSISTANT.\n          Fixes DeepSeek 3.1 issues.'
+          )}
           value={props.state.postUserRole}
           onChange={(ev) => props.setters.setState('postUserRole', ev)}
         />
 
         <TextInput
           fieldName="cfgOppose"
-          label="CFG Opposing Prompt"
+          label={t('CFG Opposing Prompt')}
           helperText={
             <>
-              A prompt that would generate the opposite of what you want. Leave empty if unsure.
-              Classifier Free Guidance. See{' '}
+              {t('A prompt that would generate the opposite of what you want. Leave empty if unsure.')}{' '}
+              {t('Classifier Free Guidance. See')}{' '}
               <a href="https://docs.novelai.net/text/cfg.html" target="_blank" class="link">
-                NovelAI's CFG docs
+                {t("NovelAI's CFG docs")}
               </a>{' '}
-              for more information.
+              {t('for more information.')}
             </>
           }
           value={props.state.cfgOppose || ''}
@@ -49,17 +53,17 @@ export const ToggleSettings: Component<PresetTabProps> = (props) => {
 
         <Select
           fieldName="phraseRepPenalty"
-          label={'Phrase Repetition Penalty'}
+          label={t('Phrase Repetition Penalty')}
           helperText={
-            'Penalizes token sequences, reducing the chance of generations repeating earlier text.'
+            t('Penalizes token sequences, reducing the chance of generations repeating earlier text.')
           }
           items={[
-            { label: 'Very Aggressive', value: 'very_aggressive' },
-            { label: 'Aggressive', value: 'aggressive' },
-            { label: 'Medium', value: 'medium' },
-            { label: 'Light', value: 'light' },
-            { label: 'Very Light', value: 'very_light' },
-            { label: 'Off', value: 'off' },
+            { label: t('Very Aggressive'), value: 'very_aggressive' },
+            { label: t('Aggressive'), value: 'aggressive' },
+            { label: t('Medium'), value: 'medium' },
+            { label: t('Light'), value: 'light' },
+            { label: t('Very Light'), value: 'very_light' },
+            { label: t('Off'), value: 'off' },
           ]}
           value={props.state.phraseRepPenalty || 'aggressive'}
           hide={props.setters.context.hides.phraseRepPenalty}
@@ -68,8 +72,8 @@ export const ToggleSettings: Component<PresetTabProps> = (props) => {
 
         <Toggle
           fieldName="tempLast"
-          label="Temperature Last"
-          helperText="When using Min P, enabling this will make temperature the last sampler to be applied"
+          label={t('Temperature Last')}
+          helperText={t('When using Min P, enabling this will make temperature the last sampler to be applied')}
           value={props.state.tempLast ?? false}
           service={props.setters.context.service}
           format={props.setters.context.format}
@@ -80,13 +84,12 @@ export const ToggleSettings: Component<PresetTabProps> = (props) => {
 
         <Toggle
           fieldName="mirostatToggle"
-          label="Use Mirostat"
+          label={t('Use Mirostat')}
           helperText={
             <>
-              Activates the Mirostat sampling technique. It aims to control perplexity during
-              sampling. See the {` `}
+              {t('Activates the Mirostat sampling technique. It aims to control perplexity during sampling. See the')}{' '}
               <A class="link" href="https://arxiv.org/abs/2007.14966">
-                paper
+                {t('paper')}
               </A>
             </>
           }
@@ -101,8 +104,10 @@ export const ToggleSettings: Component<PresetTabProps> = (props) => {
 
         <Toggle
           fieldName="tokenHealing"
-          label="Token Healing"
-          helperText="Backs up the generation process by one token then constrains the output's first token to equal the last token of your prompt."
+          label={t('Token Healing')}
+          helperText={t(
+            "Backs up the generation process by one token then constrains the output's first token to equal the last token of your prompt."
+          )}
           value={props.state.tokenHealing ?? true}
           disabled={props.state.disabled}
           service={props.setters.context.service}
@@ -113,8 +118,10 @@ export const ToggleSettings: Component<PresetTabProps> = (props) => {
         />
         <Toggle
           fieldName="addBosToken"
-          label="Add BOS Token"
-          helperText="Add begining of sequence token to the start of prompt. Disabling makes the replies more creative."
+          label={t('Add BOS Token')}
+          helperText={t(
+            'Add begining of sequence token to the start of prompt. Disabling makes the replies more creative.'
+          )}
           value={props.state.addBosToken ?? true}
           disabled={props.state.disabled}
           service={props.setters.context.service}
@@ -125,8 +132,10 @@ export const ToggleSettings: Component<PresetTabProps> = (props) => {
         />
         <Toggle
           fieldName="banEosToken"
-          label="Ban EOS Token"
-          helperText="Ban the end of sequence token. This forces the model to never end the generation prematurely."
+          label={t('Ban EOS Token')}
+          helperText={t(
+            'Ban the end of sequence token. This forces the model to never end the generation prematurely.'
+          )}
           value={props.state.banEosToken ?? false}
           disabled={props.state.disabled}
           service={props.setters.context.service}
@@ -137,8 +146,8 @@ export const ToggleSettings: Component<PresetTabProps> = (props) => {
         />
         <Toggle
           fieldName="skipSpecialTokens"
-          label="Skip Special Tokens"
-          helperText="Some specific models need this unset."
+          label={t('Skip Special Tokens')}
+          helperText={t('Some specific models need this unset.')}
           value={props.state.skipSpecialTokens ?? true}
           disabled={props.state.disabled}
           service={props.setters.context.service}
@@ -150,8 +159,8 @@ export const ToggleSettings: Component<PresetTabProps> = (props) => {
 
         <Toggle
           fieldName="doSample"
-          label="DO Sample"
-          helperText="If doing contrastive search, disable this."
+          label={t('DO Sample')}
+          helperText={t('If doing contrastive search, disable this.')}
           value={props.state.doSample ?? true}
           disabled={props.state.disabled}
           service={props.setters.context.service}
@@ -162,8 +171,8 @@ export const ToggleSettings: Component<PresetTabProps> = (props) => {
 
         <Toggle
           fieldName="earlyStopping"
-          label="Early Stopping"
-          helperText="Controls the stopping condition for beam-based methods, like beam-search."
+          label={t('Early Stopping')}
+          helperText={t('Controls the stopping condition for beam-based methods, like beam-search.')}
           value={props.state.earlyStopping ?? false}
           disabled={props.state.disabled}
           service={props.setters.context.service}
@@ -236,7 +245,7 @@ const SamplerOrder: Component<{
         hidden: items().length === 0 || props.setters.context.format === 'aphrodite',
       }}
     >
-      <Sortable label="Sampler Order" items={items()} onChange={updateValue} />
+      <Sortable label={t('Sampler Order')} items={items()} onChange={updateValue} />
     </div>
   )
 }

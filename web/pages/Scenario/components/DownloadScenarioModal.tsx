@@ -4,6 +4,7 @@ import Modal from '/web/shared/Modal'
 import Button from '/web/shared/Button'
 import { Save, X } from 'lucide-solid'
 import { deepCloneAndRemoveFields } from '/web/shared/util'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 export const ExportScenarioModal: Component<{
   show: boolean
@@ -32,10 +33,10 @@ export const ExportScenarioModal: Component<{
     <Modal
       show={props.show}
       close={props.close}
-      title="Download Scenario"
+      title={t('Download Scenario')}
       footer={
         <Button schema="secondary" onClick={props.close}>
-          <X /> Close
+          <X /> {t('Close')}
         </Button>
       }
     >

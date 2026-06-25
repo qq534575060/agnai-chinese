@@ -11,6 +11,7 @@ import { Toggle } from '../../shared/Toggle'
 import { alphaCaseInsensitiveSort } from '../../shared/util'
 import { Card } from '/web/shared/Card'
 import { SetStoreFunction } from 'solid-js/store'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 const missingFieldsInEntry = (entry: AppSchema.MemoryEntry): (keyof AppSchema.MemoryEntry)[] => [
   ...(entry.keywords.length === 0 ? ['keywords' as const] : []),
@@ -21,8 +22,8 @@ const missingFieldsInEntry = (entry: AppSchema.MemoryEntry): (keyof AppSchema.Me
 export type EntrySort = 'creationDate' | 'alpha'
 
 const entrySortItems = [
-  { label: 'By creation date', value: 'creationDate' },
-  { label: 'Alphabetically', value: 'alpha' },
+  { label: t('By creation date'), value: 'creationDate' },
+  { label: t('Alphabetically'), value: 'alpha' },
 ]
 
 const EditMemoryForm: Component<{
@@ -75,13 +76,13 @@ const EditMemoryForm: Component<{
       <div class="flex flex-col gap-2">
         <FormLabel
           fieldName="id"
-          label="Id"
-          helperText={props.state._id === '' ? 'New book' : props.state._id}
+          label={t('Id')}
+          helperText={props.state._id === '' ? t('New book') : props.state._id}
         />
         <TextInput
-          label="Book Name"
+          label={t('Book Name')}
           value={props.state.name}
-          placeholder="Name for your memory book"
+          placeholder={t('Name for your memory book')}
           required
           onChange={(e) => {
             props.setter({ name: e.currentTarget.value })
@@ -89,9 +90,9 @@ const EditMemoryForm: Component<{
         />
 
         <TextInput
-          label="Description"
+          label={t('Description')}
           value={props.state.description}
-          placeholder="(Optional) A description for your memory book"
+          placeholder={t('(Optional) A description for your memory book')}
           onChange={(e) => {
             props.setter({ description: e.currentTarget.value })
           }}
@@ -99,9 +100,9 @@ const EditMemoryForm: Component<{
         <Divider />
         <div class="sticky top-0 w-full py-2">
           <Card class="flex w-full items-center justify-between" bgOpacity={0.5}>
-            <div class="text-lg font-bold">Entries</div>
+            <div class="text-lg font-bold">{t('Entries')}</div>
             <Button onClick={addEntry}>
-              <Plus /> Entry
+              <Plus /> {t('Entry')}
             </Button>
           </Card>
         </div>
@@ -109,7 +110,7 @@ const EditMemoryForm: Component<{
           <div class="max-w-[200px]">
             <TextInput
               fieldName="search"
-              placeholder="Filter by entry name..."
+              placeholder={t('Filter by entry name...')}
               onChange={(ev) => setSearch(ev.currentTarget.value)}
             />
           </div>
@@ -137,7 +138,7 @@ const EditMemoryForm: Component<{
           )}
         </Index>
         <Button onClick={addEntry}>
-          <Plus /> Entry
+          <Plus /> {t('Entry')}
         </Button>
       </div>
     </>
@@ -164,7 +165,7 @@ const EntryCard: Component<{
       title={
         <div class={`mb-1 flex w-full items-center gap-2`}>
           <TextInput
-            placeholder="Name of entry"
+            placeholder={t('Name of entry')}
             required
             fieldName={`name.${props.index}`}
             class="w-full border-[1px]"
@@ -189,9 +190,9 @@ const EntryCard: Component<{
     >
       <div class="flex flex-col gap-2">
         <TextInput
-          prelabel="Keywords"
+          prelabel={t('Keywords')}
           required
-          placeholder="Comma separated words. E.g.: circle, shape, round, cylinder, oval"
+          placeholder={t('Comma separated words. E.g.: circle, shape, round, cylinder, oval')}
           class="border-[1px]"
           value={props.entry.keywords.join(',')}
           onChange={(e) => {
@@ -202,7 +203,7 @@ const EntryCard: Component<{
         />
         <div class="flex flex-row gap-4">
           <TextInput
-            prelabel="Priority"
+            prelabel={t('Priority')}
             required
             type="number"
             class="border-[1px]"
@@ -212,7 +213,7 @@ const EntryCard: Component<{
             }}
           />
           <TextInput
-            prelabel="Weight"
+            prelabel={t('Weight')}
             required
             type="number"
             class="border-[1px]"
@@ -225,7 +226,7 @@ const EntryCard: Component<{
         <TextInput
           isMultiline
           value={props.entry.entry}
-          placeholder="Memory entry. E.g. {{user}} likes fruit and vegetables"
+          placeholder={t('Memory entry. E.g. {{user}} likes fruit and vegetables')}
           class="min-h-[64px] border-[1px]"
           required
           onChange={(e) => {

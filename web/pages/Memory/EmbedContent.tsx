@@ -12,6 +12,7 @@ import { SolidCard } from '/web/shared/Card'
 import { pageStore } from '/web/store'
 import { createStore } from 'solid-js/store'
 import { v4 } from 'uuid'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 export { EmbedContent as default }
 
@@ -33,7 +34,7 @@ const EmbedContent: Component = (props) => {
     setLoading(true)
     try {
       await embedApi.embedArticle(store.wiki)
-      toastStore.success('Successfully created embedding')
+      toastStore.success(t('Successfully created embedding'))
       setLoading(false)
     } finally {
       setLoading(false)
@@ -42,7 +43,7 @@ const EmbedContent: Component = (props) => {
 
   const embedFile = async () => {
     if (!store.embedName) {
-      toastStore.error(`Enter a name for the embedding`)
+      toastStore.error(t('Enter a name for the embedding'))
     }
 
     setLoading(true)
@@ -50,7 +51,7 @@ const EmbedContent: Component = (props) => {
       const docNeeded = store.type === 'PDF' || store.type === 'Text file'
       const doc = file()
       if (!doc && docNeeded) {
-        toastStore.error(`No PDF loaded`)
+        toastStore.error(t('No PDF loaded'))
         return
       }
 
@@ -65,14 +66,14 @@ const EmbedContent: Component = (props) => {
 
         case 'Plain Text': {
           if (!store.embedText) {
-            toastStore.warn(`Embedding content is empty`)
+            toastStore.warn(t('Embedding content is empty'))
             return
           }
           await embedApi.embedPlainText(v4(), store.embedName, store.embedText)
           break
         }
       }
-      toastStore.success(`Successfully created embedding`)
+      toastStore.success(t('Successfully created embedding'))
     } finally {
       setLoading(false)
     }
@@ -96,16 +97,16 @@ const EmbedContent: Component = (props) => {
     <form class="flex flex-col gap-2">
       <Show when={!user.ui.embeddingModel}>
         <SolidCard bg="premium-700">
-          You need to enable{' '}
+          {t('You need to enable')}{' '}
           <b class="underline hover:cursor-pointer" onClick={() => pageStore.settings(true)}>
-            Embeddings/Long-Term Memory
+            {t('Embeddings/Long-Term Memory')}
           </b>{' '}
-          in your Settings
+          {t('in your Settings')}
         </SolidCard>
       </Show>
 
       <Select
-        items={options.map((value) => ({ label: `Embed: ${value}`, value }))}
+        items={options.map((value) => ({ label: `${t('Embed:')} ${t(value)}`, value }))}
         fieldName="embed-type"
         value={store.type}
         onChange={(ev) => setStore('type', ev.value)}
@@ -114,79 +115,83 @@ const EmbedContent: Component = (props) => {
       <Switch>
         <Match when={store.type === 'Article'}>
           <TextInput
-            label="Embed Wikipedia Article"
-            helperText="Create an embedding using the content from a Wikipedia article"
-            placeholder="URL. E.g. https://en.wikipedia.org/wiki/Taylor_Swift"
+            label={t('Embed Wikipedia Article')}
+            helperText={t('Create an embedding using the content from a Wikipedia article')}
+            placeholder={t('URL. E.g. https://en.wikipedia.org/wiki/Taylor_Swift')}
             value={store.wiki}
             onChange={(ev) => setStore('wiki', ev.currentTarget.value)}
           />
           <Button class="mt-2 w-fit" disabled={loading()} onClick={embedWiki}>
-            Embed Article
+            {t('Embed Article')}
           </Button>
         </Match>
 
         <Match when={store.type === 'PDF'}>
           <TextInput
             fieldName="embedName"
-            label="Name"
-            helperText="An identifier for your embedding."
+            label={t('Name')}
+            helperText={t('An identifier for your embedding.')}
             value={store.embedName}
             onChange={(ev) => setStore('embedName', ev.currentTarget.value)}
           />
 
           <FileInput
             fieldName="pdf"
-            label="Embed PDF"
+            label={t('Embed PDF')}
             onUpdate={onFile}
-            helperText="This may take a long time depending on the size of the PDF."
+            helperText={t('This may take a long time depending on the size of the PDF.')}
             accept="application/pdf"
           />
           <Button class="mt-2 w-fit" disabled={loading() || !file()} onClick={embedFile}>
-            Embed PDF
+            {t('Embed PDF')}
           </Button>
         </Match>
 
         <Match when={store.type === 'Text file'}>
           <TextInput
             fieldName="embedName"
-            label="Name"
-            helperText='(Optional) An identifier for your embedding. This will become a "slug". E.g. "Hello World" will become "hello-world"'
+            label={t('Name')}
+            helperText={t(
+              '(Optional) An identifier for your embedding. This will become a "slug". E.g. "Hello World" will become "hello-world"'
+            )}
             value={store.embedName}
             onChange={(ev) => setStore('embedName', ev.currentTarget.value)}
           />
 
           <FileInput
             fieldName="pdf"
-            label="Embed File"
+            label={t('Embed File')}
             onUpdate={onFile}
-            helperText="This may take a long time depending on the size of the file."
+            helperText={t('This may take a long time depending on the size of the file.')}
             accept="text/plain"
           />
           <Button class="mt-2 w-fit" disabled={loading() || !file()} onClick={embedFile}>
-            Embed File
+            {t('Embed File')}
           </Button>
         </Match>
 
         <Match when={store.type === 'Plain Text'}>
           <TextInput
             fieldName="embedName"
-            label="Name"
-            helperText='An identifier for your embedding. This will become a "slug". E.g. "Hello World" will become "hello-world"'
+            label={t('Name')}
+            helperText={t(
+              'An identifier for your embedding. This will become a "slug". E.g. "Hello World" will become "hello-world"'
+            )}
             value={store.embedName}
             onChange={(ev) => setStore('embedName', ev.currentTarget.value)}
           />
 
           <TextInput
             fieldName="embedText"
-            label="Content"
-            helperText="The content to be embedded. Use line breaks to seperate lines."
+            label={t('Content')}
+            helperText={t('The content to be embedded. Use line breaks to seperate lines.')}
             isMultiline
             onChange={(ev) => setStore('embedText', ev.currentTarget.value)}
             class="max-h-80"
           />
 
           <Button class="mt-2 w-fit" onClick={embedFile}>
-            Embed Text
+            {t('Embed Text')}
           </Button>
         </Match>
       </Switch>

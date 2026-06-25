@@ -5,6 +5,7 @@ import { getProviderConnection } from '/common/providers'
 import Button from '/web/shared/Button'
 import { Plus } from 'lucide-solid'
 import { ManageProvider } from '../Settings/Provider/Manage'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 export const ProviderList: Component = () => {
   const state = userStore((s) => ({ user: s.user }))
@@ -37,7 +38,7 @@ export const ProviderList: Component = () => {
               setShow(true)
             }}
           >
-            <Plus /> New
+            <Plus /> {t('New')}
           </Button>
         </div>
 

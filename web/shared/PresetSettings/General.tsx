@@ -7,6 +7,7 @@ import { BUILTIN_FORMATS } from '/common/presets/templates'
 import { getSubscriptionModelLimits } from '/common/util'
 import { ContextSize, ModelFormat, ResponseLength, Temperature } from './Fields'
 import { PresetTabProps } from '/web/store/preset-context'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 export const MODEL_FORMATS = Object.keys(BUILTIN_FORMATS).map((label) => ({ label, value: label }))
 
@@ -31,8 +32,10 @@ export const GeneralSettings: Component<PresetTabProps> = (props) => {
 
       <Toggle
         fieldName="localRequests"
-        label="Use Local Requests"
-        helperMarkdown={`When enabled your browser will make requests instead of Agnaistic.\n**NOTE**: Your chat will not support multiplayer.`}
+        label={t('Use Local Requests')}
+        helperMarkdown={t(
+          'When enabled your browser will make requests instead of Agnaistic.\n**NOTE**: Your chat will not support multiplayer.'
+        )}
         service={props.setters.context.service}
         format={props.setters.context.format}
         hide={props.setters.context.hides.localRequests || !!props.state.providerId}
@@ -42,8 +45,8 @@ export const GeneralSettings: Component<PresetTabProps> = (props) => {
 
       <Toggle
         fieldName="thirdPartyUrlNoSuffix"
-        label="Disable Auto-URL"
-        helperText="No paths will be added to your URL."
+        label={t('Disable Auto-URL')}
+        helperText={t('No paths will be added to your URL.')}
         value={props.state.thirdPartyUrlNoSuffix}
         service={props.setters.context.service}
         hide={
@@ -72,8 +75,8 @@ export const GeneralSettings: Component<PresetTabProps> = (props) => {
         >
           <RangeInput
             fieldName="swipesPerGeneration"
-            label="Swipes Per Generation"
-            helperText="Number of responses (in swipes) that should generate."
+            label={t('Swipes Per Generation')}
+            helperText={t('Number of responses (in swipes) that should generate.')}
             min={1}
             max={10}
             step={1}
@@ -103,8 +106,10 @@ export const GeneralSettings: Component<PresetTabProps> = (props) => {
 
         <RangeInput
           fieldName="minP"
-          label="Min P"
-          helperText="Used to discard tokens with the probability under a threshold (min_p) in the sampling process. Higher values will make text more predictable. (Put this value on 0 to disable its effect)"
+          label={t('Min P')}
+          helperText={t(
+            'Used to discard tokens with the probability under a threshold (min_p) in the sampling process. Higher values will make text more predictable. (Put this value on 0 to disable its effect)'
+          )}
           min={0}
           max={1}
           step={0.01}
@@ -117,16 +122,16 @@ export const GeneralSettings: Component<PresetTabProps> = (props) => {
 
         <Toggle
           fieldName="streamResponse"
-          label="Stream Response"
-          helperText="Stream the response as it is generated"
+          label={t('Stream Response')}
+          helperText={t('Stream the response as it is generated')}
           value={props.state.streamResponse ?? false}
           disabled={props.state.disabled}
           onChange={(ev) => props.setters.setState('streamResponse', ev)}
         />
         <Toggle
           fieldName="disableNameStops"
-          label="Exclude Name Stops"
-          helperText="Disables automatically adding character names to stopping strings"
+          label={t('Exclude Name Stops')}
+          helperText={t('Disables automatically adding character names to stopping strings')}
           value={props.state.disableNameStops}
           onChange={(ev) => props.setters.setState('disableNameStops', ev)}
         />

@@ -12,30 +12,31 @@ import TagInput from '/web/shared/TagInput'
 import PromptEditor from '/web/shared/PromptEditor'
 import { FormLabel } from '/web/shared/FormLabel'
 import { Card, Pill, TitleCard } from '/web/shared/Card'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 const eventTypeOptions: Option<AppSchema.ScenarioEventType>[] = [
-  { value: 'hidden', label: 'Hidden (not shown to the user)' },
-  { value: 'world', label: 'World (shown, external to the character)' },
-  { value: 'character', label: 'Character (shown, thought or action by the character)' },
-  { value: 'ooc', label: 'Out Of Character (only visible by the user)' },
+  { value: 'hidden', label: t('Hidden (not shown to the user)') },
+  { value: 'world', label: t('World (shown, external to the character)') },
+  { value: 'character', label: t('Character (shown, thought or action by the character)') },
+  { value: 'ooc', label: t('Out Of Character (only visible by the user)') },
 ]
 
 const triggerTypeOptions: Array<Option<AppSchema.ScenarioTriggerKind>> = [
   {
     value: 'onGreeting',
-    label: 'Greeting',
+    label: t('Greeting'),
   },
   {
     value: 'onManualTrigger',
-    label: 'Manual Trigger',
+    label: t('Manual Trigger'),
   },
   {
     value: 'onChatOpened',
-    label: 'Chat Opened',
+    label: t('Chat Opened'),
   },
   {
     value: 'onCharacterMessageReceived',
-    label: 'Message Received',
+    label: t('Message Received'),
   },
 ]
 
@@ -180,7 +181,7 @@ const EditScenarioEvents: Component<{
     <>
       <EventsHelp />
 
-      <FormLabel label="States Used" helperText="The states you have used in your events so far" />
+      <FormLabel label={t('States Used')} helperText={t('The states you have used in your events so far')} />
       <div class="flex gap-2">
         <For each={availableStates()}>
           {(state) => {
@@ -192,16 +193,16 @@ const EditScenarioEvents: Component<{
 
       <div class="relative flex flex-col gap-4">
         <div class="sticky top-0 z-[1] flex items-center justify-between rounded-md bg-[var(--bg-900)] p-2">
-          <div class="text-lg font-bold">Events</div>
+          <div class="text-lg font-bold">{t('Events')}</div>
           <Button onClick={addEntry}>
-            <Plus /> Create Event
+            <Plus /> {t('Create Event')}
           </Button>
         </div>
 
         <Switch>
           <Match when={!props.state.entries.length}>
             <div class="mt-16 flex w-full justify-center rounded-full text-xl">
-              You have no events yet.
+              {t('You have no events yet.')}
             </div>
           </Match>
 
@@ -218,7 +219,7 @@ const EditScenarioEvents: Component<{
                         class="border-[1px]"
                         parentClass="w-full"
                         value={entry().name}
-                        placeholder='Event name, e.g. "Greeting"'
+                        placeholder={t('Event name, e.g. "Greeting"')}
                         onChange={(ev) => updateEntry(index, { name: ev.currentTarget.value })}
                       />
                       <div class="flex gap-2">
@@ -261,7 +262,7 @@ const EditScenarioEvents: Component<{
                     <Card>
                       <Select
                         fieldName={`trigger-kind.${index}`}
-                        label="Trigger"
+                        label={t('Trigger')}
                         items={triggerTypeOptions}
                         value={entry().trigger.kind}
                         onChange={(option) =>
@@ -269,34 +270,34 @@ const EditScenarioEvents: Component<{
                         }
                       />
                       <FormLabel
-                        label="Required States"
-                        helperText="Which state(s) are required before this event can be triggered."
+                        label={t('Required States')}
+                        helperText={t('Which state(s) are required before this event can be triggered.')}
                       />
                       <TagInput
                         fieldName={`requires.${index}`}
                         disabled={entry().trigger.kind === 'onGreeting'}
                         availableTags={availableStates()}
                         value={entry().requires || []}
-                        placeholder="States required to trigger"
+                        placeholder={t('States required to trigger')}
                         onSelect={(ev) => updateEntry(index, { requires: ev })}
                       />
                       <FormLabel
-                        label="States to Assign"
-                        helperText="When triggered, which states will be assigned to the chat"
+                        label={t('States to Assign')}
+                        helperText={t('When triggered, which states will be assigned to the chat')}
                       />
                       <TagInput
                         fieldName={`assigns.${index}`}
                         availableTags={availableStates()}
                         value={entry().assigns}
-                        placeholder="States to add when triggered"
+                        placeholder={t('States to add when triggered')}
                         onSelect={(ev) => updateEntry(index, { assigns: ev })}
                       />
                     </Card>
                     <Card>
                       <Select
                         fieldName={`type.${index}`}
-                        label="Type"
-                        helperText="How will this event be shown to the user."
+                        label={t('Type')}
+                        helperText={t('How will this event be shown to the user.')}
                         items={eventTypeOptions}
                         value={entry().type}
                         onChange={(ev) => updateEntry(index, { type: ev.value as any })}
@@ -304,13 +305,17 @@ const EditScenarioEvents: Component<{
                     </Card>
 
                     <FormLabel
-                      label="Prompt Text"
-                      helperText="The prompt text to send whenever this event occurs. The (OOC: something) text will be hidden from the user."
+                      label={t('Prompt Text')}
+                      helperText={t(
+                        'The prompt text to send whenever this event occurs. The (OOC: something) text will be hidden from the user.'
+                      )}
                     />
                     <PromptEditor
                       fieldName={`text.${index}`}
                       showHelp
-                      placeholder="*{{char}} suddenly remembers something important to say to {{user}}!* (OOC: Make up a personal memory with {{user}}.)"
+                      placeholder={t(
+                        '*{{char}} suddenly remembers something important to say to {{user}}!* (OOC: Make up a personal memory with {{user}}.)'
+                      )}
                       hideHelperText
                       noDummyPreview
                       value={entry().text}
@@ -320,15 +325,17 @@ const EditScenarioEvents: Component<{
 
                     <Switch>
                       <Match when={entry().trigger.kind === 'onGreeting'}>
-                        <TitleCard>Automatically sent when starting a new chat.</TitleCard>
+                        <TitleCard>{t('Automatically sent when starting a new chat.')}</TitleCard>
                       </Match>
 
                       <Match when={entry().trigger.kind === 'onManualTrigger'}>
                         <Card>
                           <RangeInput
                             fieldName={`trigger-probability.${index}`}
-                            label="Probability"
-                            helperText="Manual triggers will be randomly selected, with higher probability for higher values."
+                            label={t('Probability')}
+                            helperText={t(
+                              'Manual triggers will be randomly selected, with higher probability for higher values.'
+                            )}
                             value={(entry().trigger as AppSchema.ScenarioOnManual).probability}
                             min={0}
                             max={100}
@@ -346,8 +353,10 @@ const EditScenarioEvents: Component<{
                         <Card>
                           <RangeInput
                             fieldName={`trigger-awayHours.${index}`}
-                            label="After (hours)"
-                            helperText="After how many hours should this trigger be activated? The longest trigger will be selected."
+                            label={t('After (hours)')}
+                            helperText={t(
+                              'After how many hours should this trigger be activated? The longest trigger will be selected.'
+                            )}
                             value={(entry().trigger as AppSchema.ScenarioOnChatOpened).awayHours}
                             min={0}
                             max={24 * 7}
@@ -365,8 +374,10 @@ const EditScenarioEvents: Component<{
                         <Card>
                           <RangeInput
                             fieldName={`trigger-minMessagesSinceLastEvent.${index}`}
-                            label="After (messages since last event)"
-                            helperText="After how many message should this trigger be activated? The shortest trigger will be selected."
+                            label={t('After (messages since last event)')}
+                            helperText={t(
+                              'After how many message should this trigger be activated? The shortest trigger will be selected.'
+                            )}
                             value={
                               (entry().trigger as AppSchema.ScenarioOnCharacterMessageRx)
                                 .minMessagesSinceLastEvent
@@ -396,11 +407,11 @@ const EditScenarioEvents: Component<{
         <div class="mt-4 flex justify-end gap-2">
           <Button onClick={() => nav(`/memory?tab=1`)} schema="secondary">
             <X />
-            Cancel
+            {t('Cancel')}
           </Button>
           <Button onClick={onSubmit} disabled={props.loading || invalidStates().length > 0}>
             <Save />
-            Update
+            {t('Update')}
           </Button>
         </div>
       </div>
@@ -416,7 +427,7 @@ const EventsHelp: Component = () => {
       class="mb-2 bg-[var(--bg-800)]"
       open={false}
       titleClickOpen
-      title={<div class="text-lg font-bold">Scenario Events Help</div>}
+      title={<div class="text-lg font-bold">{t('Scenario Events Help')}</div>}
     >
       <div class="space-y-4">
         <p>Events are triggers when:</p>

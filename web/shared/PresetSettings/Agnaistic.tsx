@@ -14,6 +14,7 @@ import { AppSchema } from '/common/types'
 import { Pill } from '../Card'
 import { RootModal } from '../Modal'
 import { PresetFuncs, ContextPreset } from '/web/store/preset-context'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 const MODEL_NAMES = new Map<string, string>()
 
@@ -46,12 +47,12 @@ export const AgnaisticSettings: Component<{
     props.setters.upsert({
       quiet: true,
       onCreated: (preset) => {
-        toastStore.success('Preset created')
+        toastStore.success(t('Preset created'))
 
         if (!appctx.chat?._id) return
         props.setters.change({ chatId: appctx.chat._id, presetId: preset._id })
       },
-      onUpdated: () => toastStore.success('Model updated'),
+      onUpdated: () => toastStore.success(t('Model updated')),
     })
 
     // presetStore.updatePreset(props.state._id, { providerModels: next })
@@ -69,7 +70,7 @@ export const AgnaisticSettings: Component<{
     }
 
     if (!opt) {
-      return <div>None</div>
+      return <div>{t('None')}</div>
     }
 
     return (
@@ -95,7 +96,9 @@ export const AgnaisticSettings: Component<{
           modalTitle={
             <div class="flex w-full flex-col">
               <div class="flex justify-center">
-                <SubCTA onClick={emitter.emit.close}>Subscribe for higher quality models</SubCTA>
+                <SubCTA onClick={emitter.emit.close}>
+                  {t('Subscribe for higher quality models')}
+                </SubCTA>
               </div>
             </div>
           }
@@ -127,10 +130,10 @@ export const ModelList: Component<{ show: boolean; close: () => void }> = (props
   const cats = useModelCategories()
 
   return (
-    <RootModal show={props.show} close={props.close} maxWidth="half" title="Available Models">
+    <RootModal show={props.show} close={props.close} maxWidth="half" title={t('Available Models')}>
       <div class="flex flex-col gap-2">
         <Show when={cfg.images.length > 0}>
-          <div class="font-bold">Image Models</div>
+          <div class="font-bold">{t('Image Models')}</div>
           <div class="flex flex-col gap-2">
             <For each={cfg.images}>
               {(model) => (

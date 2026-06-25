@@ -13,6 +13,7 @@ import EmbedContent from './EmbedContent'
 import { embedApi } from '/web/store/embeddings'
 import { EditEmbedModal } from '/web/shared/EditEmbedModal'
 import { Page } from '/web/Layout'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 type STEntry = {
   addMenu: boolean
@@ -117,7 +118,7 @@ export const EmbedsTab: Component = (props) => {
 
   return (
     <>
-      <PageHeader title="Memory - Embeddings" />
+      <PageHeader title={t('Memory - Embeddings')} />
       <EmbedContent />
 
       <div class="flex flex-col gap-2">
@@ -127,7 +128,7 @@ export const EmbedsTab: Component = (props) => {
               <SolidCard size="md" class="flex w-full items-center gap-1" bg="bg-800">
                 <div
                   class="flex cursor-pointer"
-                  title={each.state === 'loaded' ? 'Loaded' : 'Not loaded'}
+                  title={each.state === 'loaded' ? t('Loaded') : t('Not loaded')}
                 >
                   {each.state === 'loaded' ? <FileCheck /> : <FileX class="text-gray-500" />}
                 </div>
@@ -150,7 +151,7 @@ export const EmbedsTab: Component = (props) => {
         confirm={() => embedApi.removeDocument(deleting()!)}
         show={!!deleting()}
         close={() => setDeleting()}
-        message={`Are you sure you wish to delete this embedding?\n\n${deleting()}`}
+        message={`${t('Are you sure you wish to delete this embedding?')}\n\n${deleting()}`}
       />
     </>
   )
@@ -172,7 +173,7 @@ export const BooksTab: Component = (props) => {
   return (
     <Page>
       <PageHeader
-        title="Memory - Books"
+        title={t('Memory - Books')}
         subtitle={
           <>
             {' '}
@@ -181,7 +182,7 @@ export const BooksTab: Component = (props) => {
               target="_blank"
               class="link"
             >
-              Memory Book Guide
+              {t('Memory Book Guide')}
             </a>
           </>
         }
@@ -189,12 +190,12 @@ export const BooksTab: Component = (props) => {
 
       <div class="flex w-full justify-end gap-4">
         <Button onClick={() => setImport(true)}>
-          <Upload /> Import Book
+          <Upload /> {t('Import Book')}
         </Button>
 
         <Button href="/memory/new">
           <Plus />
-          Create Book
+          {t('Create Book')}
         </Button>
       </div>
 
@@ -233,7 +234,7 @@ export const BooksTab: Component = (props) => {
       <ImportMemoryModal show={showImport()} close={() => setImport(false)} />
       <ConfirmModal
         confirm={() => removeBook(deleting()!)}
-        message={`Are you sure you wish to delete this memory book?\n\n${deleting()?.name}`}
+        message={`${t('Are you sure you wish to delete this memory book?')}\n\n${deleting()?.name}`}
         close={() => setDeleting()}
         show={!!deleting()}
       />
@@ -242,7 +243,7 @@ export const BooksTab: Component = (props) => {
 }
 
 const NoBooks = () => (
-  <div class="flex justify-center">You have no memory books yet. Click Create to get started.</div>
+  <div class="flex justify-center">{t('You have no memory books yet. Click Create to get started.')}</div>
 )
 
 type ImportProps = {
@@ -261,9 +262,9 @@ const ImportMemoryModal: Component<ImportProps> = (props) => {
       const json = JSON.parse(content)
       const book = validateBookJson(file.file.name, json)
       setJson(book || json)
-      toastStore.success('Memory book accepted')
+      toastStore.success(t('Memory book accepted'))
     } catch (ex: any) {
-      toastStore.warn(`Invalid memory book JSON. ${ex.message}`)
+      toastStore.warn(`${t('Invalid memory book JSON.')} ${ex.message}`)
     }
   }
 
@@ -275,21 +276,21 @@ const ImportMemoryModal: Component<ImportProps> = (props) => {
   const Footer = (
     <>
       <Button onClick={props.close}>
-        <X /> Cancel
+        <X /> {t('Cancel')}
       </Button>
       <Button onClick={onImport}>
-        <Upload /> Import
+        <Upload /> {t('Import')}
       </Button>
     </>
   )
 
   return (
-    <Modal show={props.show} close={props.close} title="Import Memory Book" footer={Footer}>
+    <Modal show={props.show} close={props.close} title={t('Import Memory Book')} footer={Footer}>
       <FileInput
         fieldName="json"
-        label="JSON File"
+        label={t('JSON File')}
         accept="text/json,application/json"
-        helperText="Only Agnaistic exported memory books are currently supported."
+        helperText={t('Only Agnaistic exported memory books are currently supported.')}
         required
         onUpdate={updateJson}
       />
@@ -312,7 +313,7 @@ function validateBookJson(filename: string, json: any): AppSchema.MemoryBook | v
   }
 
   const book = json as AppSchema.MemoryBook
-  json.name = json.name || 'Imported Book'
+  json.name = json.name || t('Imported Book')
   json.kind = 'memory'
 
   const entries: AppSchema.MemoryEntry[] = []

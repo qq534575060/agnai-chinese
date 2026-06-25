@@ -7,12 +7,13 @@ import { HelpModal } from '../Modal'
 import { ListInput } from '../ListInput'
 import { presetDefaults } from '/common/default-preset'
 import { PresetTabProps } from '/web/store/preset-context'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 export const SliderSettings: Component<PresetTabProps> = (props) => {
   return (
     <div class="flex flex-col gap-4" classList={{ hidden: props.tab !== 'Samplers' }}>
       <Card class="flex flex-col gap-1" bg="bg-500">
-        <div>Dynamic Temperature</div>
+        <div>{t('Dynamic Temperature')}</div>
         <div class="text-600 text-sm">
           The range to use for dynamic temperature. When used, the actual temperature is allowed to
           be automatically adjusted dynamically between DynaTemp ± DynaTempRange. For example,
@@ -22,7 +23,7 @@ export const SliderSettings: Component<PresetTabProps> = (props) => {
 
         <RangeInput
           fieldName="dynatemp_range"
-          label="Range"
+          label={t('Range')}
           min={0}
           max={20}
           step={0.01}
@@ -35,7 +36,7 @@ export const SliderSettings: Component<PresetTabProps> = (props) => {
 
         <RangeInput
           fieldName="dynatemp_exponent"
-          label="Exponent"
+          label={t('Exponent')}
           min={0}
           max={20}
           step={0.01}
@@ -50,11 +51,11 @@ export const SliderSettings: Component<PresetTabProps> = (props) => {
 
       <Card class="flex flex-col gap-1" bg="bg-500" hide={props.setters.context.hides.xtcThreshold}>
         <div class="flex gap-1">
-          XTC (Exclude Top Choices) <XTCHelpModal />
+          XTC ({t('Exclude Top Choices')}) <XTCHelpModal />
         </div>
 
         <RangeInput
-          label="Threshold"
+          label={t('Threshold')}
           min={0}
           max={1}
           step={0.01}
@@ -67,7 +68,7 @@ export const SliderSettings: Component<PresetTabProps> = (props) => {
         />
 
         <RangeInput
-          label="Probability"
+          label={t('Probability')}
           min={0}
           max={1}
           step={0.01}
@@ -86,18 +87,18 @@ export const SliderSettings: Component<PresetTabProps> = (props) => {
         hide={props.setters.context.hides.dryMultiplier}
       >
         <div>
-          DRY Sampling{' '}
+          {t('DRY Sampling')}{' '}
           <a
             class="link"
             href="https://github.com/oobabooga/text-generation-webui/pull/5677"
             target="_blank"
           >
-            Reference
+            {t('Reference')}
           </a>
         </div>
 
         <RangeInput
-          label={'Multiplier'}
+          label={t('Multiplier')}
           min={0}
           max={1}
           step={0.01}
@@ -110,7 +111,7 @@ export const SliderSettings: Component<PresetTabProps> = (props) => {
         />
 
         <RangeInput
-          label="Base"
+          label={t('Base')}
           min={0}
           max={6}
           step={0.01}
@@ -123,7 +124,7 @@ export const SliderSettings: Component<PresetTabProps> = (props) => {
         />
 
         <RangeInput
-          label="Allowed Length"
+          label={t('Allowed Length')}
           min={0}
           max={10}
           step={1}
@@ -136,8 +137,8 @@ export const SliderSettings: Component<PresetTabProps> = (props) => {
 
         <ListInput
           value={props.state.drySequenceBreakers || []}
-          label="Sequence Breakers"
-          helperText="Words and phrases that can be repeated. E.g: Chararacter nicknames"
+          label={t('Sequence Breakers')}
+          helperText={t('Words and phrases that can be repeated. E.g: Chararacter nicknames')}
           setter={(next) => props.setters.setState('drySequenceBreakers', next)}
           hide={props.setters.context.hides.drySequenceBreakers}
         />
@@ -146,8 +147,10 @@ export const SliderSettings: Component<PresetTabProps> = (props) => {
       <Card class="flex flex-col gap-4" bg="bg-500">
         <RangeInput
           fieldName="smoothingFactor"
-          label="Smoothing Factor"
-          helperText="Activates Quadratic Sampling. Applies an S-curve to logits, penalizing low-probability tokens and smoothing out high-probability tokens. Allows model creativity at lower temperatures. (Put this value on 0 to disable its effect)"
+          label={t('Smoothing Factor')}
+          helperText={t(
+            'Activates Quadratic Sampling. Applies an S-curve to logits, penalizing low-probability tokens and smoothing out high-probability tokens. Allows model creativity at lower temperatures. (Put this value on 0 to disable its effect)'
+          )}
           min={0}
           max={10}
           step={0.01}
@@ -160,8 +163,10 @@ export const SliderSettings: Component<PresetTabProps> = (props) => {
         />
         <RangeInput
           fieldName="smoothingCurve"
-          label="Smoothing Curve"
-          helperText="The smoothing curve to use for Cubic Sampling. (Put this value on 1 to disable its effect)"
+          label={t('Smoothing Curve')}
+          helperText={t(
+            'The smoothing curve to use for Cubic Sampling. (Put this value on 1 to disable its effect)'
+          )}
           min={1}
           max={5}
           step={0.01}
@@ -174,16 +179,16 @@ export const SliderSettings: Component<PresetTabProps> = (props) => {
         />
         <RangeInput
           fieldName="cfgScale"
-          label="CFG Scale"
+          label={t('CFG Scale')}
           helperText={
             <>
-              Classifier Free Guidance. See{' '}
+              {t('Classifier Free Guidance. See')}{' '}
               <a href="https://docs.novelai.net/text/cfg.html" target="_blank" class="link">
-                NovelAI's CFG docs
+                {t("NovelAI's CFG docs")}
               </a>{' '}
-              for more information.
+              {t('for more information.')}
               <br />
-              Set to 1 to disable.
+              {t('Set to 1 to disable.')}
             </>
           }
           min={1}
@@ -198,8 +203,10 @@ export const SliderSettings: Component<PresetTabProps> = (props) => {
 
         <RangeInput
           fieldName="topP"
-          label="Top P"
-          helperText="Used to discard unlikely text in the sampling process. Lower values will make text more predictable but can become repetitious. (Put this value on 1 to disable its effect)"
+          label={t('Top P')}
+          helperText={t(
+            'Used to discard unlikely text in the sampling process. Lower values will make text more predictable but can become repetitious. (Put this value on 1 to disable its effect)'
+          )}
           min={0}
           max={1}
           step={0.01}
@@ -213,8 +220,10 @@ export const SliderSettings: Component<PresetTabProps> = (props) => {
 
         <RangeInput
           fieldName="topK"
-          label="Top K"
-          helperText="Alternative sampling method, can be combined with top_p. The number of highest probability vocabulary tokens to keep for top-k-filtering. (Put this value on 0 to disable its effect)"
+          label={t('Top K')}
+          helperText={t(
+            'Alternative sampling method, can be combined with top_p. The number of highest probability vocabulary tokens to keep for top-k-filtering. (Put this value on 0 to disable its effect)'
+          )}
           min={0}
           max={100}
           step={1}
@@ -227,8 +236,10 @@ export const SliderSettings: Component<PresetTabProps> = (props) => {
         />
         <RangeInput
           fieldName="topA"
-          label="Top A"
-          helperText="Increases the consistency of the output by removing unlikely tokens based on the highest token probability. Exclude all tokens with p < (top_a * highest_p^2) (Put this value on 0 to disable its effect)"
+          label={t('Top A')}
+          helperText={t(
+            'Increases the consistency of the output by removing unlikely tokens based on the highest token probability. Exclude all tokens with p < (top_a * highest_p^2) (Put this value on 0 to disable its effect)'
+          )}
           min={0}
           max={1}
           step={0.01}
@@ -242,8 +253,10 @@ export const SliderSettings: Component<PresetTabProps> = (props) => {
 
         <RangeInput
           fieldName="mirostatTau"
-          label="Mirostat Tau"
-          helperText="*Enable Mirotstat in the Toggles section* Mirostat aims to keep the text at a fixed complexity set by tau."
+          label={t('Mirostat Tau')}
+          helperText={t(
+            '*Enable Mirotstat in the Toggles section* Mirostat aims to keep the text at a fixed complexity set by tau.'
+          )}
           min={0}
           max={6}
           step={0.01}
@@ -255,8 +268,8 @@ export const SliderSettings: Component<PresetTabProps> = (props) => {
         />
         <RangeInput
           fieldName="mirostatLR"
-          label="Mirostat Learning Rate (ETA)"
-          helperText="Mirostat aims to keep the text at a fixed complexity set by tau."
+          label={t('Mirostat Learning Rate (ETA)')}
+          helperText={t('Mirostat aims to keep the text at a fixed complexity set by tau.')}
           min={0}
           max={1}
           step={0.01}
@@ -268,8 +281,10 @@ export const SliderSettings: Component<PresetTabProps> = (props) => {
         />
         <RangeInput
           fieldName="tailFreeSampling"
-          label="Tail Free Sampling"
-          helperText="Increases the consistency of the output by working from the bottom and trimming the lowest probability tokens. (Put this value on 1 to disable its effect)"
+          label={t('Tail Free Sampling')}
+          helperText={t(
+            'Increases the consistency of the output by working from the bottom and trimming the lowest probability tokens. (Put this value on 1 to disable its effect)'
+          )}
           min={0}
           max={1}
           step={0.001}
@@ -282,8 +297,10 @@ export const SliderSettings: Component<PresetTabProps> = (props) => {
         />
         <RangeInput
           fieldName="typicalP"
-          label="Typical P"
-          helperText="Selects tokens according to the expected amount of information they contribute. Set this setting to 1 to disable its effect."
+          label={t('Typical P')}
+          helperText={t(
+            'Selects tokens according to the expected amount of information they contribute. Set this setting to 1 to disable its effect.'
+          )}
           min={0}
           max={1}
           step={0.01}
@@ -296,8 +313,10 @@ export const SliderSettings: Component<PresetTabProps> = (props) => {
         />
         <RangeInput
           fieldName="repetitionPenalty"
-          label="Repetition Penalty"
-          helperText="Used to penalize words that were already generated or belong to the context (Going over 1.2 breaks 6B models. Set to 1.0 to disable)."
+          label={t('Repetition Penalty')}
+          helperText={t(
+            'Used to penalize words that were already generated or belong to the context (Going over 1.2 breaks 6B models. Set to 1.0 to disable).'
+          )}
           min={0}
           max={3}
           step={0.01}
@@ -310,8 +329,8 @@ export const SliderSettings: Component<PresetTabProps> = (props) => {
         />
         <RangeInput
           fieldName="repetitionPenaltyRange"
-          label="Repetition Penalty Range"
-          helperText="How many tokens will be considered repeated if they appear in the next output."
+          label={t('Repetition Penalty Range')}
+          helperText={t('How many tokens will be considered repeated if they appear in the next output.')}
           min={0}
           max={2048}
           step={1}
@@ -324,8 +343,10 @@ export const SliderSettings: Component<PresetTabProps> = (props) => {
         />
         <RangeInput
           fieldName="repetitionPenaltySlope"
-          label="Repetition Penalty Slope"
-          helperText="Affects the ramping of the penalty's harshness, starting from the final token. (Set to 0.0 to disable)"
+          label={t('Repetition Penalty Slope')}
+          helperText={t(
+            "Affects the ramping of the penalty's harshness, starting from the final token. (Set to 0.0 to disable)"
+          )}
           min={0}
           max={10}
           step={0.01}
@@ -338,15 +359,16 @@ export const SliderSettings: Component<PresetTabProps> = (props) => {
         />
         <RangeInput
           fieldName="etaCutoff"
-          label="ETA Cutoff"
+          label={t('ETA Cutoff')}
           helperText={
             <>
-              In units of 1e-4; a reasonable value is 3. The main parameter of the special Eta
-              Sampling technique. See {` `}
+              {t(
+                'In units of 1e-4; a reasonable value is 3. The main parameter of the special Eta Sampling technique. See'
+              )}{' '}
               <A class="link" href="https://arxiv.org/pdf/2210.15191.pdf">
-                this paper
+                {t('this paper')}
               </A>{' '}
-              for a description.
+              {t('for a description.')}
             </>
           }
           min={0}
@@ -360,8 +382,10 @@ export const SliderSettings: Component<PresetTabProps> = (props) => {
         />
         <RangeInput
           fieldName="epsilonCutoff"
-          label="Epsilon Cutoff"
-          helperText="In units of 1e-4; a reasonable value is 3. This sets a probability floor below which tokens are excluded from being sampled."
+          label={t('Epsilon Cutoff')}
+          helperText={t(
+            'In units of 1e-4; a reasonable value is 3. This sets a probability floor below which tokens are excluded from being sampled.'
+          )}
           min={0}
           max={9}
           step={0.0001}
@@ -373,8 +397,10 @@ export const SliderSettings: Component<PresetTabProps> = (props) => {
         />
         <RangeInput
           fieldName="frequencyPenalty"
-          label="Frequency Penalty"
-          helperText="Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim. (Set to 0.0 to disable)"
+          label={t('Frequency Penalty')}
+          helperText={t(
+            "Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim. (Set to 0.0 to disable)"
+          )}
           min={-2.0}
           max={2.0}
           step={0.01}
@@ -387,8 +413,10 @@ export const SliderSettings: Component<PresetTabProps> = (props) => {
         />
         <RangeInput
           fieldName="presencePenalty"
-          label="Presence Penalty"
-          helperText="Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics. (Set to 0.0 to disable)"
+          label={t('Presence Penalty')}
+          helperText={t(
+            "Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics. (Set to 0.0 to disable)"
+          )}
           min={-2.0}
           max={2.0}
           step={0.01}
@@ -401,8 +429,10 @@ export const SliderSettings: Component<PresetTabProps> = (props) => {
         />
         <RangeInput
           fieldName="encoderRepitionPenalty"
-          label="Encoder Repetion Penalty"
-          helperText="Also known as the 'Hallucinations filter'. Used to penalize tokens that are *not* in the prior text. Higher value = more likely to stay in context, lower value = more likely to diverge"
+          label={t('Encoder Repetion Penalty')}
+          helperText={t(
+            "Also known as the 'Hallucinations filter'. Used to penalize tokens that are *not* in the prior text. Higher value = more likely to stay in context, lower value = more likely to diverge"
+          )}
           min={0.8}
           max={1.5}
           step={0.01}
@@ -416,8 +446,10 @@ export const SliderSettings: Component<PresetTabProps> = (props) => {
 
         <RangeInput
           fieldName="penaltyAlpha"
-          label="Penalty Alpha"
-          helperText="The values balance the model confidence and the degeneration penalty in contrastive search decoding"
+          label={t('Penalty Alpha')}
+          helperText={t(
+            'The values balance the model confidence and the degeneration penalty in contrastive search decoding'
+          )}
           min={0}
           max={5}
           step={0.01}
@@ -431,8 +463,8 @@ export const SliderSettings: Component<PresetTabProps> = (props) => {
 
         <RangeInput
           fieldName="numBeams"
-          label="Number of Beams"
-          helperText="Number of beams for beam search. 1 means no beam search."
+          label={t('Number of Beams')}
+          helperText={t('Number of beams for beam search. 1 means no beam search.')}
           min={1}
           max={20}
           step={1}
@@ -448,14 +480,16 @@ export const SliderSettings: Component<PresetTabProps> = (props) => {
 }
 
 const XTCHelpModal = () => (
-  <HelpModal cta={<a class="link">Reference</a>} title="Exclude Top Choices">
+  <HelpModal cta={<a class="link">{t('Reference')}</a>} title={t('Exclude Top Choices')}>
     <p>
-      XTC is a novel sampler that turns truncation on its head: Instead of pruning the least likely
-      tokens, under certain circumstances, it removes the most likely tokens from consideration.
+      {t(
+        'XTC is a novel sampler that turns truncation on its head: Instead of pruning the least likely tokens, under certain circumstances, it removes the most likely tokens from consideration.'
+      )}
     </p>
     <p>
-      More precisely, it removes all except the least likely token meeting a given threshold, with a
-      given probability
+      {t(
+        'More precisely, it removes all except the least likely token meeting a given threshold, with a given probability'
+      )}
     </p>
     <p>
       <a
@@ -463,7 +497,7 @@ const XTCHelpModal = () => (
         target="_blank"
         class="link"
       >
-        Reference
+        {t('Reference')}
       </a>
     </p>
   </HelpModal>

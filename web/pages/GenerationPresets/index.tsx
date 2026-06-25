@@ -16,6 +16,7 @@ import { Page } from '/web/Layout'
 import PresetSettings from '/web/shared/PresetSettings'
 import { templates } from '/common/presets/templates'
 import { usePresetContext } from '/web/store/preset-context'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 export const GenerationPresetsPage: Component = () => {
   const { updateTitle } = setComponentPageTitle('Preset')
@@ -45,18 +46,18 @@ export const GenerationPresetsPage: Component = () => {
     if (params.id === 'new') {
       const copySource = query.preset
       if (copySource) {
-        updateTitle(`Copy preset ${copySource}`)
+        updateTitle(`${t('Copy preset')} ${copySource}`)
       } else if (presets.importing) {
-        updateTitle(`Import preset`)
+        updateTitle(t('Import preset'))
       } else {
-        updateTitle(`Create preset`)
+        updateTitle(t('Create preset'))
       }
 
       if (presets.importing) {
         setters.setState({
           ...presets.importing,
           _id: '',
-          name: presets.importing.name ? `${presets.importing.name} - Imported` : 'Imported Preset',
+          name: presets.importing.name ? `${presets.importing.name} - Imported` : t('Imported Preset'),
         })
         presetStore.setImportPreset()
         return
@@ -90,7 +91,7 @@ export const GenerationPresetsPage: Component = () => {
     // }
 
     if (params.id && store) {
-      updateTitle(`Edit preset ${store.current.name}`)
+      updateTitle(`${t('Edit preset')} ${store.current.name}`)
     }
   })
 
@@ -117,7 +118,7 @@ export const GenerationPresetsPage: Component = () => {
   if (params.id && params.id !== 'new' && !presets.editing) {
     return (
       <Page>
-        <PageHeader title="Generation Presets" />
+        <PageHeader title={t('Generation Presets')} />
         <Loading />
       </Page>
     )
@@ -125,40 +126,40 @@ export const GenerationPresetsPage: Component = () => {
 
   return (
     <Page>
-      <PageHeader title="Generation Presets" />
+      <PageHeader title={t('Generation Presets')} />
       <div class="flex flex-col gap-2 pb-10">
         <Show when={params.id === 'default'}>
           <TitleCard type="orange" class="font-bold">
-            This is a built-in preset and cannot be saved.{' '}
+            {t('This is a built-in preset and cannot be saved.')}{' '}
             <A class="link" href={`/presets/new?preset=${query.preset}`}>
-              Click here
+              {t('Click here')}
             </A>{' '}
-            if you'd like to create a copy of this preset.
+            {t("if you'd like to create a copy of this preset.")}
           </TitleCard>
         </Show>
         <div class="flex flex-col gap-4 p-2">
           <form onSubmit={onSave} class="flex flex-col gap-4">
             <div class="flex gap-4">
               <Show when={presets.presets.length > 1}>
-                <Button onClick={() => setSelecting(true)}>Load Preset</Button>
+                <Button onClick={() => setSelecting(true)}>{t('Load Preset')}</Button>
               </Show>
               <Button onClick={startNew}>
                 <Plus />
-                New Preset
+                {t('New Preset')}
               </Button>
             </div>
             <div class="flex flex-col">
-              <div>ID: {store.current._id || 'New Preset'}</div>
+              <div>{t('ID:')} {store.current._id || t('New Preset')}</div>
               <TextInput
                 fieldName="id"
-                value={store.current._id || 'New Preset'}
+                value={store.current._id || t('New Preset')}
                 disabled
                 class="hidden"
               />
               <TextInput
-                label="Name"
-                helperText="A name or short description of your preset"
-                placeholder="Preset name"
+                label={t('Name')}
+                helperText={t('A name or short description of your preset')}
+                placeholder={t('Preset name')}
                 value={store.current.name}
                 onChange={(ev) => setters.setState('name', ev.currentTarget.value)}
                 required
@@ -170,7 +171,7 @@ export const GenerationPresetsPage: Component = () => {
             <Show when={store.current.userId !== 'SYSTEM'}>
               <div class="flex flex-row justify-end">
                 <Button disabled={presets.saving} onClick={onSave}>
-                  <Save /> Save
+                  <Save /> {t('Save')}
                 </Button>
               </div>
             </Show>
@@ -182,7 +183,7 @@ export const GenerationPresetsPage: Component = () => {
         show={deleting()}
         close={() => setDeleting(false)}
         confirm={deletePreset}
-        message="Are you sure you wish to delete this preset?"
+        message={t('Are you sure you wish to delete this preset?')}
       />
     </Page>
   )
@@ -218,22 +219,24 @@ const EditPreset: Component<{
     <Modal
       show={props.show}
       close={props.close}
-      title="Load Preset"
+      title={t('Load Preset')}
       footer={
         <>
           <Button schema="secondary" onClick={props.close}>
-            <X /> Cancel
+            <X /> {t('Cancel')}
           </Button>
           <Button onClick={select}>
-            <Edit /> Load Preset
+            <Edit /> {t('Load Preset')}
           </Button>
         </>
       }
     >
       <form>
         <Select
-          label="Preset"
-          helperText="Select a preset to start editing. If you are currently editing a preset, it won't be in the list."
+          label={t('Preset')}
+          helperText={t(
+            "Select a preset to start editing. If you are currently editing a preset, it won't be in the list."
+          )}
           items={state.presets
             .filter((pre) => pre._id !== params.id)
             .map((pre) => ({ label: pre.name, value: pre._id }))}

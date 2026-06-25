@@ -7,6 +7,7 @@ import Button from '/web/shared/Button'
 import { Plus, Upload } from 'lucide-solid'
 import ImportScenarioModal from './components/ImportScenarioModal'
 import { Page } from '/web/Layout'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 const ScenarioList: Component = () => {
   const scenarioState = scenarioStore((s) => ({ loading: s.loading, scenarios: s.scenarios }))
@@ -38,18 +39,18 @@ const ScenarioList: Component = () => {
       <PageHeader
         title={
           <div class="flex w-full justify-between">
-            <div>Scenarios</div>
+            <div>{t('Scenarios')}</div>
             <div class="flex text-base">
               <div class="px-1">
                 <Button schema="secondary" onClick={() => setShowImport(true)}>
                   <Upload />
-                  <span class="hidden sm:inline">Import Scenario</span>
+                  <span class="hidden sm:inline">{t('Import Scenario')}</span>
                 </Button>
               </div>
               <div class="px-1">
                 <Button schema="primary" onClick={() => create()}>
                   <Plus />
-                  <span class="hidden sm:inline">Create Scenario</span>
+                  <span class="hidden sm:inline">{t('Create Scenario')}</span>
                 </Button>
               </div>
             </div>
@@ -65,7 +66,7 @@ const ScenarioList: Component = () => {
         </Match>
         <Match when={scenarioState.scenarios.length === 0}>
           <div class="mt-16 flex w-full justify-center rounded-full text-xl">
-            You have no scenarios yet.
+            {t('You have no scenarios yet.')}
           </div>
         </Match>
         <Match when={scenarioState.scenarios.length > 0}>
@@ -76,7 +77,7 @@ const ScenarioList: Component = () => {
                   <A class="flex w-full cursor-pointer gap-2" href={`/scenario/${scenario._id}`}>
                     <div class="flex flex-col justify-center gap-0 p-2">
                       <div class="overflow-hidden text-ellipsis whitespace-nowrap font-bold leading-5">
-                        {scenario.name || 'Unnamed Scenario'}
+                        {scenario.name || t('Unnamed Scenario')}
                       </div>
                       <Show when={scenario.description}>
                         <div class="overflow-hidden text-ellipsis whitespace-nowrap text-sm leading-4">

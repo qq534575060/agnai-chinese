@@ -10,6 +10,7 @@ import { Card } from '../Card'
 import PromptEditor from '../PromptEditor'
 import { ThirdPartyFormat } from '/common/adapters'
 import { PresetTabProps } from '/web/store/preset-context'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 export type FieldProps = Omit<PresetTabProps, 'tab'>
 export type Field<T = {}, TOnly extends keyof FieldProps = keyof FieldProps> = Component<
@@ -21,12 +22,12 @@ export const PresetMode: Field = (props) => {
     <div>
       <Select
         fieldName="presetMode"
-        label="Preset Mode"
-        helperText={`Toggle between using "essential options" and all available controls.`}
+        label={t('Preset Mode')}
+        helperText={t('Toggle between using "essential options" and all available controls.')}
         value={props.state.presetMode}
         items={[
-          { label: 'Advanced', value: 'advanced' },
-          { label: 'Simple', value: 'simple' },
+          { label: t('Advanced'), value: 'advanced' },
+          { label: t('Simple'), value: 'simple' },
         ]}
         onChange={(ev) => props.setters.setState('presetMode', ev.value as any)}
       />
@@ -40,8 +41,8 @@ export const ResponseLength: Field<{
   return (
     <RangeInput
       fieldName="maxTokens"
-      label="Response Length"
-      helperText="Maximum length of the response. Measured in 'tokens'"
+      label={t('Response Length')}
+      helperText={t("Maximum length of the response. Measured in 'tokens'")}
       min={16}
       max={2048}
       step={1}
@@ -49,7 +50,7 @@ export const ResponseLength: Field<{
       disabled={props.state.disabled}
       onChange={(val) => props.setters.setState('maxTokens', val)}
       recommended={props.subMax.maxTokens}
-      recommendLabel="Max"
+      recommendLabel={t('Max')}
     />
   )
 }
@@ -70,30 +71,30 @@ export const ContextSize: Field<{ subMax: Partial<SubscriptionModelLevel> }> = (
         label={
           <div class="flex gap-2">
             <div>
-              Context Size{' '}
+              {t('Context Size')}{' '}
               <Show when={maxCtx()}>
-                <span class="text-xs italic text-gray-500">(Max: {maxCtx()})</span>
+                <span class="text-xs italic text-gray-500">({t('Max')}: {maxCtx()})</span>
               </Show>
             </div>
 
             <ToggleButton
               size="xs"
               fieldName="useMaxContext"
-              onText="On"
-              offText="Off"
+              onText={t('On')}
+              offText={t('Off')}
               value={props.state.useMaxContext}
               onChange={(ev) => props.setters.setState('useMaxContext', ev)}
             >
-              Use Max If Known:
+              {t('Use Max If Known:')}
             </ToggleButton>
           </div>
         }
         helperText={
           <>
             <p>
-              The amount of infomation sent to the model to generate a response.{' '}
+              {t('The amount of infomation sent to the model to generate a response.')}{' '}
               <Show when={props.setters.context.service !== 'agnaistic'}>
-                Check your AI service for the maximum context size.
+                {t('Check your AI service for the maximum context size.')}
               </Show>
             </p>
           </>
@@ -113,13 +114,13 @@ export const ReasoningTags: Field = (props) => {
   return (
     <div class="flex flex-col gap-1">
       <FormLabel
-        label="Reasoning Tags"
-        helperText="For collapsing reasoning sections in the UI: "
+        label={t('Reasoning Tags')}
+        helperText={t('For collapsing reasoning sections in the UI: ')}
       />
 
       <div class="flex gap-2">
         <TextInput
-          prelabel="Start"
+          prelabel={t('Start')}
           parentClass="w-1/2"
           fieldName="reasoning.start"
           placeholder="<think>"
@@ -132,7 +133,7 @@ export const ReasoningTags: Field = (props) => {
           }
         />
         <TextInput
-          prelabel="End"
+          prelabel={t('End')}
           parentClass="w-1/2"
           fieldName="reasoning.end"
           placeholder="</think>"
@@ -153,8 +154,8 @@ export const SystemPrompt: Field = (props) => {
   return (
     <Card classList={{ hidden: props.setters.context.hides.systemPrompt ?? false }}>
       <FormLabel
-        label="System Prompt"
-        helperText={<>The task the AI is performing. Leave blank if uncertain.</>}
+        label={t('System Prompt')}
+        helperText={<>{t('The task the AI is performing. Leave blank if uncertain.')}</>}
       />
       <PromptEditor
         fieldName="systemPrompt"
@@ -172,17 +173,17 @@ export const Jailbreak: Field = (props) => {
   return (
     <Card classList={{ hidden: props.setters.context.hides.ultimeJailbreak ?? false }}>
       <FormLabel
-        label="Jailbreak (UJB)"
+        label={t('Jailbreak (UJB)')}
         helperText={
           <>
             <p>
-              <b>Uncensored Models</b>: Typically stylistic instructions. E.g. "Respond succinctly
-              using slang"
+              <b>{t('Uncensored Models')}</b>:{' '}
+              {t('Typically stylistic instructions. E.g. "Respond succinctly using slang"')}
             </p>
             <p>
-              <b>Censored Models</b>: Instructions to 'jailbreak' from filtering.
+              <b>{t('Censored Models')}</b>: {t("Instructions to 'jailbreak' from filtering.")}
             </p>
-            <p>Large jailbreak prompts can cause repetition. Use this prompt only if needed.</p>
+            <p>{t('Large jailbreak prompts can cause repetition. Use this prompt only if needed.')}</p>
           </>
         }
       />
@@ -190,7 +191,7 @@ export const Jailbreak: Field = (props) => {
       <PromptEditor
         fieldName="ultimeJailbreak"
         include={['char', 'user']}
-        placeholder="Respond succinctly using slang"
+        placeholder={t('Respond succinctly using slang')}
         value={props.state.ultimeJailbreak ?? ''}
         disabled={props.state.disabled}
         onChange={(ev) => props.setters.setState('ultimeJailbreak', ev.prompt!)}
@@ -219,18 +220,19 @@ export const JinjaTemplate: Field = (props) => {
       fieldName="jinjaTemplate"
       label={
         <div class="flex w-full justify-between">
-          <div>Jinja Template</div>
+          <div>{t('Jinja Template')}</div>
           <ToggleButton
             size="sm"
-            onText="Enabled"
-            offText="Disabled"
+            onText={t('Enabled')}
+            offText={t('Disabled')}
             value={props.state.jinjaEnabled ?? false}
             onChange={(ev) => props.setters.setState('jinjaEnabled', ev)}
           />
         </div>
       }
-      helperMarkdown="For overriding third-party chat completion templates. Only sent when **Enabled**.
-      If left blank, one will be generated for you."
+      helperMarkdown={t(
+        'For overriding third-party chat completion templates. Only sent when **Enabled**.\n      If left blank, one will be generated for you.'
+      )}
       value={props.state.jinjaTemplate || ''}
       disabled={props.state.disabled}
       hide={!props.setters.context.format || !allowed[props.setters.context.format]}
@@ -245,9 +247,10 @@ export const ModelFormat: Field = (props) => {
     <>
       <Select
         fieldName="modelFormat"
-        label="Prompt Format"
-        helperMarkdown={`Formatting to use if using "Universal Tags" in your prompt template
-      (I.e. \`<user>...</user>, <bot>...</bot>\`)`}
+        label={t('Prompt Format')}
+        helperMarkdown={t(
+          'Formatting to use if using "Universal Tags" in your prompt template\n      (I.e. `<user>...</user>, <bot>...</bot>`)'
+        )}
         items={MODEL_FORMATS}
         value={props.state.modelFormat || 'None'}
         onChange={(ev) => props.setters.setState('modelFormat', ev.value as any)}
@@ -261,8 +264,10 @@ export const Temperature: Field = (props) => {
     <>
       <RangeInput
         fieldName="temp"
-        label="Temperature"
-        helperText="Creativity: Randomness of sampling. High values can increase creativity, but may make text less sensible. Lower values will make text more predictable."
+        label={t('Temperature')}
+        helperText={t(
+          'Creativity: Randomness of sampling. High values can increase creativity, but may make text less sensible. Lower values will make text more predictable.'
+        )}
         min={0.1}
         max={props.state.presetMode === 'simple' ? 1.5 : 10}
         step={0.01}

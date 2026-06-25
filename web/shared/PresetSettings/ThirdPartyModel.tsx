@@ -20,6 +20,7 @@ import { round } from '/common/util'
 import { createEmitter } from '../util'
 import { SubscriptionModelOption } from '/common/types/presets'
 import { PresetFuncs, ContextPreset } from '/web/store/preset-context'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 type SelectorProps = {
   state: ContextPreset
@@ -164,7 +165,7 @@ const CompatModel: Selector = (props) => {
       props.state.providerModels?.[props.state.providerId] || props.state.thirdPartyModel
 
     const match = modelList().find((m) => m.value === modelId)
-    if (!match) return `Your current model is not in the model list`
+    if (!match) return t('Your current model is not in the model list')
   })
 
   return (
@@ -175,11 +176,11 @@ const CompatModel: Selector = (props) => {
           closeSub={emitter.on}
           modalTitle={
             <div class="flex flex-col gap-2">
-              <div>Select a Model</div>
+              <div>{t('Select a Model')}</div>
 
               <div class="flex gap-2">
                 <TextInput
-                  prelabel="Manual Model ID"
+                  prelabel={t('Manual Model ID')}
                   parentClass="w-full !font-normal !text-sm !h-8"
                   class=""
                   value={customId()}
@@ -195,7 +196,7 @@ const CompatModel: Selector = (props) => {
                     emitter.emit.close()
                   }}
                 >
-                  Confirm
+                  {t('Confirm')}
                 </Button>
               </div>
             </div>
@@ -213,7 +214,7 @@ const CompatModel: Selector = (props) => {
           buttonLabel={
             props.state.providerModels?.[props.state.providerId! || '...'] ||
             props.state.thirdPartyModel ||
-            'Model - None selected'
+            t('Model - None selected')
           }
           // disabled={props.setters.context.loading}
           footer={<SelectorFooter state={props.state} setters={props.setters} />}
@@ -265,10 +266,10 @@ const NovelAIModel: Selector = (props) => {
   const label = createMemo(() => {
     const id =
       props.state.providerModels?.[props.state.providerId || 'na'] || props.state.novelModel
-    if (!id) return 'Model - None Selected'
+    if (!id) return t('Model - None Selected')
     const match = Object.values(NOVEL_MODELS).find((model) => model === id)
 
-    if (!match) return 'Model - None Selected'
+    if (!match) return t('Model - None Selected')
     return match
   })
 
@@ -276,7 +277,7 @@ const NovelAIModel: Selector = (props) => {
     <div class="flex flex-wrap gap-2">
       <CustomSelect
         size="sm"
-        modalTitle="Select a Model"
+        modalTitle={t('Select a Model')}
         options={novelModels()}
         selected={
           props.state.providerModels?.[props.state.providerId || 'na'] || props.state.novelModel
@@ -287,8 +288,8 @@ const NovelAIModel: Selector = (props) => {
       <Show when={page.flags.naiModel}>
         <TextInput
           fieldName="novelModelOverride"
-          helperText="Advanced: Use a custom NovelAI model"
-          label="NovelAI Model Override"
+          helperText={t('Advanced: Use a custom NovelAI model')}
+          label={t('NovelAI Model Override')}
         />
       </Show>
     </div>
@@ -335,7 +336,7 @@ const OpenRouterModels: Selector = (props) => {
     const match = openRouterModels().find((s) => s.value === id)
     if (!match) {
       if (!!id?.trim()) return `Model - ${id}`
-      return 'Model - None selected'
+      return t('Model - None selected')
     }
 
     return (
@@ -360,7 +361,7 @@ const OpenRouterModels: Selector = (props) => {
   const ManualModel = (
     <div class="flex gap-2">
       <TextInput
-        prelabel="Manual Model ID"
+        prelabel={t('Manual Model ID')}
         parentClass="w-full !font-normal !text-sm !h-8"
         class=""
         value={customId()}
@@ -376,7 +377,7 @@ const OpenRouterModels: Selector = (props) => {
           emitter.emit.close()
         }}
       >
-        Confirm
+        {t('Confirm')}
       </Button>
     </div>
   )
@@ -388,7 +389,7 @@ const OpenRouterModels: Selector = (props) => {
         size="sm"
         modalTitle={
           <div class="flex flex-col gap-2">
-            <div>Select a Model</div>
+            <div>{t('Select a Model')}</div>
           </div>
         }
         listener={sub.emit}
@@ -433,7 +434,7 @@ const ArliModels: Selector = (props) => {
       : props.state.arliModel
     const match = state.models.find((s) => s.id === id)
     if (!match) {
-      return 'Model - None selected'
+      return t('Model - None selected')
     }
 
     return (
@@ -496,14 +497,14 @@ const ArliModels: Selector = (props) => {
       <CustomSelect
         maxHeight
         size="sm"
-        modalTitle="Select a Model"
+        modalTitle={t('Select a Model')}
         options={options()}
         search={search}
         header={
           <Select
             items={classes()}
             value={''}
-            label={'Filter: Model Size'}
+            label={t('Filter: Model Size')}
             onChange={(ev) => setModelclass(ev.value)}
             parentClass="text-sm"
           />
@@ -785,10 +786,10 @@ const FeatherlessModels: Selector = (props) => {
         size="sm"
         modalTitle={
           <div class="flex flex-col gap-2">
-            <div>Select a Model</div>
+            <div>{t('Select a Model')}</div>
             <div class="flex gap-2">
               <TextInput
-                prelabel="Manual Model ID"
+                prelabel={t('Manual Model ID')}
                 parentClass="w-full !font-normal !text-sm !h-8"
                 class=""
                 value={customId()}
@@ -804,7 +805,7 @@ const FeatherlessModels: Selector = (props) => {
                   emitter.emit.close()
                 }}
               >
-                Confirm
+                {t('Confirm')}
               </Button>
             </div>
           </div>
@@ -820,7 +821,7 @@ const FeatherlessModels: Selector = (props) => {
           <>
             <Accordian
               class="!bg-opacity-10 !p-1"
-              title={<span class="text-sm">Model Classes</span>}
+              title={<span class="text-sm">{t('Model Classes')}</span>}
               open={classesOpen()}
               titleClickOpen
               onChange={(ev) => setClassesOpen(ev)}
@@ -895,7 +896,7 @@ const ClaudeModel: Selector = (props) => {
       props.state.thirdPartyModel ||
       props.state.claudeModel ||
       ''
-    if (!id) return 'Model - None Selected'
+    if (!id) return t('Model - None Selected')
     const match = Object.values(CLAUDE_MODELS).find((model) => model === id)
 
     if (!match) return id
@@ -907,11 +908,11 @@ const ClaudeModel: Selector = (props) => {
       size="sm"
       modalTitle={
         <div class="flex flex-col gap-2">
-          <div>Select a Model</div>
+          <div>{t('Select a Model')}</div>
 
           <div class="flex gap-2">
             <TextInput
-              prelabel="Manual Model ID"
+              prelabel={t('Manual Model ID')}
               parentClass="w-full !font-normal !text-sm !h-8"
               class=""
               value={customId()}
@@ -927,7 +928,7 @@ const ClaudeModel: Selector = (props) => {
                 emitter.emit.close()
               }}
             >
-              Confirm
+              {t('Confirm')}
             </Button>
           </div>
         </div>
@@ -955,7 +956,7 @@ const GoogleModels: Selector = (props) => {
   const [customId, setCustomId] = createSignal('')
   const label = createMemo(() => {
     const id = props.state.googleModel
-    if (!id) return 'Model - None Selected'
+    if (!id) return t('Model - None Selected')
     const match = Object.values(GOOGLE_MODELS).find((model) => model.id === id)
 
     if (!match) return id
@@ -972,11 +973,11 @@ const GoogleModels: Selector = (props) => {
       size="sm"
       modalTitle={
         <div class="flex flex-col gap-2">
-          <div>Select a Model</div>
+          <div>{t('Select a Model')}</div>
 
           <div class="flex gap-2">
             <TextInput
-              prelabel="Manual Model ID"
+              prelabel={t('Manual Model ID')}
               parentClass="w-full !font-normal !text-sm !h-8"
               class=""
               value={customId()}
@@ -992,7 +993,7 @@ const GoogleModels: Selector = (props) => {
                 emitter.emit.close()
               }}
             >
-              Confirm
+              {t('Confirm')}
             </Button>
           </div>
         </div>
@@ -1066,7 +1067,7 @@ const HordeModels: Selector = (props) => {
     <>
       <div class="flex items-center gap-2">
         <Button class="w-fit" size="sm" onClick={open}>
-          <Show when={currentModels().length} fallback="Select Model(s)">
+          <Show when={currentModels().length} fallback={t('Select Model(s)')}>
             {currentModels().length} Model(s) Selected
           </Show>
         </Button>
@@ -1074,14 +1075,14 @@ const HordeModels: Selector = (props) => {
       <RootModal
         show={show()}
         close={close}
-        title="Select Horde Models"
+        title={t('Select Horde Models')}
         footer={
           <>
             <Button schema="secondary" onClick={close}>
               <X /> Cancel
             </Button>
             <Button onClick={save}>
-              <Save /> Select Model(s)
+              <Save /> {t('Select Model(s)')}
             </Button>
           </>
         }
@@ -1097,7 +1098,7 @@ const HordeModels: Selector = (props) => {
             class="min-h-[6rem]"
             fieldName="workers"
             items={cfg.models}
-            label="Select Model(s)"
+            label={t('Select Model(s)')}
             onChange={(next) => {
               console.log(next)
               setSelected(next.map((n) => n.value))

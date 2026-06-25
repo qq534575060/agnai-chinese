@@ -6,7 +6,7 @@ import Modal, { ConfirmModal } from '../../shared/Modal'
 import PageHeader from '../../shared/PageHeader'
 import { presetValidator } from '../../../common/presets'
 import { exportPreset, presetStore, toastStore, userStore } from '../../store'
-import { capitalize, setComponentPageTitle, tryParseImport } from '../../shared/util'
+import { setComponentPageTitle, tryParseImport } from '../../shared/util'
 import { getPresetLabel, getServiceName, sortByLabel } from '/web/shared/adapter'
 import FileInput, { FileInputResult, getFileAsString } from '/web/shared/FileInput'
 import { validateBody } from '/common/valid'
@@ -15,6 +15,7 @@ import TextInput from '/web/shared/TextInput'
 import { ProviderList } from './ProviderList'
 import { useStrictTabs } from '/web/shared/Tabs'
 import Divider from '/web/shared/Divider'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 const PresetList: Component = () => {
   setComponentPageTitle('Presets')
@@ -57,14 +58,14 @@ const PresetList: Component = () => {
 
   return (
     <Page>
-      <PageHeader title={capitalize(tabs.current())} />
+      <PageHeader title={tabs.current() === 'presets' ? t('Presets') : t('Providers')} />
       <div class="flex gap-1">
         <Button
           size="sm"
           schema={tabs.current() === 'presets' ? 'primary' : 'secondary'}
           onClick={() => tabs.set('presets')}
         >
-          Presets
+          {t('Presets')}
         </Button>
 
         <Button
@@ -72,7 +73,7 @@ const PresetList: Component = () => {
           schema={tabs.current() === 'providers' ? 'primary' : 'secondary'}
           onClick={() => tabs.set('providers')}
         >
-          Providers
+          {t('Providers')}
         </Button>
       </div>
       <Divider class="!my-2" />
@@ -88,18 +89,18 @@ const PresetList: Component = () => {
         <div class="flex w-full justify-between">
           <div>
             <TextInput
-              placeholder="Filter..."
+              placeholder={t('Filter...')}
               onChange={(ev) => setFilter(ev.currentTarget.value)}
             />
           </div>
           <div class="flex w-full justify-end gap-2">
             <Button href="/presets/new">
               <Plus />
-              New
+              {t('New')}
             </Button>
 
             <Button onClick={() => setImporting(true)}>
-              <Import size={20} /> Import
+              <Import size={20} /> {t('Import')}
             </Button>
           </div>
         </div>
@@ -164,7 +165,7 @@ const PresetList: Component = () => {
         show={!!deleting()}
         close={() => setDeleting()}
         confirm={deletePreset}
-        message="Are you sure you wish to delete this preset?"
+        message={t('Are you sure you wish to delete this preset?')}
       />
     </Page>
   )
@@ -195,7 +196,7 @@ const ImportPreset: Component<{ close: () => void; success: () => void }> = (pro
 
       const { errors, original } = validateBody(importValid, parsed, { notThrow: true })
       if (errors.length) {
-        toastStore.error(`Preset is not valid: ${errors.join(', ')}`)
+        toastStore.error(`${t('Preset is not valid:')} ${errors.join(', ')}`)
         console.log(errors)
         return
       }
@@ -203,14 +204,14 @@ const ImportPreset: Component<{ close: () => void; success: () => void }> = (pro
       presetStore.setImportPreset(original as any)
       props.success()
     } catch (ex: any) {
-      toastStore.error(ex, { prefix: `Could not parse preset` })
+      toastStore.error(ex, { prefix: t('Could not parse preset') })
       return
     }
   }
 
   return (
-    <Modal show close={props.close} title="Import Preset">
-      <FileInput fieldName="file" label="Preset JSON" onUpdate={onChange} />
+    <Modal show close={props.close} title={t('Import Preset')}>
+      <FileInput fieldName="file" label={t('Preset JSON')} onUpdate={onChange} />
     </Modal>
   )
 }

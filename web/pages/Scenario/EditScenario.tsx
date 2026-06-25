@@ -14,6 +14,7 @@ import EditScenarioEvents from './EditScenarioEvents'
 import { Page } from '/web/Layout'
 import { createStore } from 'solid-js/store'
 import { AppSchema } from '/common/types/index'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 const init: AppSchema.ScenarioBook = {
   _id: '',
@@ -69,24 +70,24 @@ const CreateScenario: Component = () => {
       <PageHeader
         title={
           <div class="flex w-full justify-between">
-            <div>Edit Scenario</div>
+            <div>{t('Edit Scenario')}</div>
             <div class="flex text-base">
               <div class="px-1">
                 <Button schema="secondary" onClick={() => duplicateScenario()}>
                   <Copy size={16} />
-                  <span class="hidden sm:inline">Duplicate</span>
+                  <span class="hidden sm:inline">{t('Duplicate')}</span>
                 </Button>
               </div>
               <div class="px-1">
                 <Button schema="secondary" onClick={() => setShowDownload(true)}>
                   <Download size={16} />
-                  <span class="hidden sm:inline">Download</span>
+                  <span class="hidden sm:inline">{t('Download')}</span>
                 </Button>
               </div>
               <div class="px-1">
                 <Button schema="red" onClick={() => setShowDelete(true)}>
                   <Trash size={16} />
-                  <span class="hidden sm:inline">Delete</span>
+                  <span class="hidden sm:inline">{t('Delete')}</span>
                 </Button>
               </div>
             </div>
@@ -97,56 +98,62 @@ const CreateScenario: Component = () => {
       <div class="flex items-center gap-2">
         <Show
           when={state.entries.entries.length ?? 0 > 0}
-          fallback={<p>No events attached to this scenario</p>}
+          fallback={<p>{t('No events attached to this scenario')}</p>}
         >
-          <p>{state.entries.length} event(s)</p>
+          <p>{state.entries.length} {t('event(s)')}</p>
         </Show>
       </div>
 
       <Divider />
 
-      <div class="text-lg font-bold">Scenario Details</div>
+      <div class="text-lg font-bold">{t('Scenario Details')}</div>
 
       <form class="flex flex-col gap-4" ref={ref}>
         <TextInput
           required
-          label="Name"
-          helperText="The name of your scenario."
-          placeholder="My scenario"
+          label={t('Name')}
+          helperText={t('The name of your scenario.')}
+          placeholder={t('My scenario')}
           value={state.name}
           onChange={(ev) => setState('name', ev.currentTarget.value)}
         />
 
         <TextInput
-          label="Description"
-          helperText="More information about your scenario."
-          placeholder="This scenario is about..."
+          label={t('Description')}
+          helperText={t('More information about your scenario.')}
+          placeholder={t('This scenario is about...')}
           value={state.description}
           onChange={(ev) => setState('description', ev.currentTarget.value)}
         />
 
         <TextInput
           isMultiline
-          label="Prompt Text"
-          helperText="Optional. Additional text to add to the scenario prompt."
-          placeholder="{{char}} and {{user}} are in a scenario. They are..."
+          label={t('Prompt Text')}
+          helperText={t('Optional. Additional text to add to the scenario prompt.')}
+          placeholder={t('{{char}} and {{user}} are in a scenario. They are...')}
           value={state.text}
           onChange={(ev) => setState('text', ev.currentTarget.value)}
         />
 
         <Toggle
           fieldName="overwriteCharacterScenario"
-          label="Overwrite character's scenario"
-          helperText="If the character already has a scenario, overwrite it with this one. Otherwise, append to it."
+          label={t("Overwrite character's scenario")}
+          helperText={t(
+            'If the character already has a scenario, overwrite it with this one. Otherwise, append to it.'
+          )}
           value={state.overwriteCharacterScenario}
           onChange={(ev) => setState('overwriteCharacterScenario', ev)}
         />
 
         <TextInput
           isMultiline
-          label="User Instructions"
-          helperText="Optional. Text to display to the user to help them understand how to use this scenario."
-          placeholder="Thanks for trying out my scenario! Use the Trigger Event menu to move the story forward."
+          label={t('User Instructions')}
+          helperText={t(
+            'Optional. Text to display to the user to help them understand how to use this scenario.'
+          )}
+          placeholder={t(
+            'Thanks for trying out my scenario! Use the Trigger Event menu to move the story forward.'
+          )}
           value={state.instructions}
           onChange={(ev) => setState('instructions', ev.currentTarget.value)}
         />
@@ -162,7 +169,7 @@ const CreateScenario: Component = () => {
         show={!!showDelete()}
         close={() => setShowDelete(false)}
         confirm={confirmDelete}
-        message="Are you sure you wish to delete this scenario?"
+        message={t('Are you sure you wish to delete this scenario?')}
       />
 
       <ExportScenarioModal

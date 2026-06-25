@@ -12,9 +12,10 @@ import { ArrowLeft, Save } from 'lucide-solid'
 import { emptyBookWithEmptyEntry } from '/common/memory'
 import { Page } from '/web/Layout'
 import { createStore } from 'solid-js/store'
+import { t } from '/web/shared/AdminChineseLocalizer'
 
 const EditMemoryPage = () => {
-  const { updateTitle } = setComponentPageTitle('Memory book')
+  const { updateTitle } = setComponentPageTitle(t('Memory book'))
   const nav = useNavigate()
   const params = useParams()
   const books = memoryStore((s) => ({ books: s.books }))
@@ -28,14 +29,14 @@ const EditMemoryPage = () => {
 
   onMount(() => {
     if (params.id === 'new') {
-      updateTitle('Create memory book')
+      updateTitle(t('Create memory book'))
       setState(emptyBookWithEmptyEntry())
       return
     }
 
     const match = books.books.list.find((m) => m._id === params.id)
     if (match) {
-      updateTitle(`Edit ${match.name}`)
+      updateTitle(`${t('Edit')} ${match.name}`)
       setState(match)
     }
   })
@@ -65,16 +66,16 @@ const EditMemoryPage = () => {
 
   return (
     <Page>
-      <PageHeader title="Edit Memory Book" />
+      <PageHeader title={t('Edit Memory Book')} />
 
       <div class="mt-4 flex justify-between">
         <A class="link flex items-center" href="/memory?tab=0">
-          <ArrowLeft size={16} /> Back to List
+          <ArrowLeft size={16} /> {t('Back to List')}
         </A>
 
         <Button onClick={saveBook}>
           <Save />
-          {!state._id ? 'Create Book' : 'Update Book'}
+          {!state._id ? t('Create Book') : t('Update Book')}
         </Button>
       </div>
       <EditMemoryForm
@@ -86,44 +87,49 @@ const EditMemoryPage = () => {
       <div class="mt-4 flex justify-end">
         <Button onClick={saveBook}>
           <Save />
-          {!state._id ? 'Create Book' : 'Update Book'}
+          {!state._id ? t('Create Book') : t('Update Book')}
         </Button>
       </div>
 
       <div class="mt-8 flex flex-col">
         <div class="flex flex-col gap-2">
-          <div class="text-lg font-bold">Definitions</div>
+          <div class="text-lg font-bold">{t('Definitions')}</div>
           <FormLabel
             fieldName="priorty"
-            label="Priority"
-            helperText="When deciding which entries to INCLUDE in the prompt, the higher the priority entries win."
+            label={t('Priority')}
+            helperText={t(
+              'When deciding which entries to INCLUDE in the prompt, the higher the priority entries win.'
+            )}
           />
 
           <FormLabel
             fieldName="weight"
-            label="Weight"
-            helperText="When deciding how to ORDER entries, the higher the weight the closer to the bottom."
+            label={t('Weight')}
+            helperText={t(
+              'When deciding how to ORDER entries, the higher the weight the closer to the bottom.'
+            )}
           />
 
           <FormLabel
             fieldName="keywords"
-            label="Keywords"
+            label={t('Keywords')}
             helperText={
               <>
-                These are the terms that trigger the entry to be potentially included in the prompt.
-                You can use <code>{'{{char}}'}</code> and <code>{'{{user}}'}</code> placeholders
-                here.
+                {t('These are the terms that trigger the entry to be potentially included in the prompt. You can use')}{' '}
+                <code>{'{{char}}'}</code> and <code>{'{{user}}'}</code>{' '}
+                {t('placeholders here.')}
               </>
             }
           />
 
           <FormLabel
             fieldName="entry"
-            label="Entry"
+            label={t('Entry')}
             helperText={
               <>
-                This is the text that will be included in the prompt. You can use{' '}
-                <code>{'{{char}}'}</code> and <code>{'{{user}}'}</code> placeholders here.
+                {t('This is the text that will be included in the prompt. You can use')}{' '}
+                <code>{'{{char}}'}</code> and <code>{'{{user}}'}</code>{' '}
+                {t('placeholders here.')}
               </>
             }
           />
