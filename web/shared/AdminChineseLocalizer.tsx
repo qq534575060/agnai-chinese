@@ -727,11 +727,22 @@ const AdminChineseLocalizer: Component = () => {
   const schedule = (root: Node = document.body) => {
     if (pending) return
     pending = true
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       pending = false
+      observer?.disconnect()
       localize(root)
       localizeDocumentTitle()
-    }, 0)
+      observeChanges()
+    })
+  }
+
+  const observeChanges = () => {
+    if (!observer || language() !== 'zh-CN') return
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    })
   }
 
   createEffect(() => {
@@ -764,13 +775,7 @@ const AdminChineseLocalizer: Component = () => {
       }
     })
 
-    observer.observe(document.body, {
-      attributes: true,
-      attributeFilter: [...TEXT_ATTRIBUTES],
-      characterData: true,
-      childList: true,
-      subtree: true,
-    })
+    observeChanges()
   })
 
   const onLanguageChange = (event: Event) => {
