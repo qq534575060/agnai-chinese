@@ -17,8 +17,9 @@ import { createStore } from 'solid-js/store'
 import { toUserStoreObject } from './util'
 import {
   AppLanguage,
-  getAppLanguage,
+  appLanguage,
   setAppLanguage,
+  t,
 } from '/web/shared/AdminChineseLocalizer'
 
 const settingTabs: Record<Tab, string> = {
@@ -44,7 +45,7 @@ export const SettingsModal = () => {
   const [footer, setFooter] = createSignal<any>()
   return (
     <RootModal
-      title="Settings"
+      title={t('Settings')}
       show={state.showSettings}
       close={() => pageStore.settings(false)}
       fixedHeight
@@ -52,7 +53,7 @@ export const SettingsModal = () => {
       footer={
         <>
           <Button schema="secondary" onClick={() => pageStore.settings(false)}>
-            Close
+            {t('Close')}
           </Button>
           {footer()}
         </>
@@ -78,8 +79,6 @@ const Settings: Component<{ footer?: (children: any) => void }> = (props) => {
 
   const [query, setQuery] = useSearchParams()
   const [tab, setTab] = createSignal<number>(+(query.tab ?? '0'))
-  const [language, setLanguage] = createSignal<AppLanguage>(getAppLanguage())
-
   const [store, setStore] = createStore(toUserStoreObject(user.user! || {}))
 
   createEffect(
@@ -126,7 +125,7 @@ const Settings: Component<{ footer?: (children: any) => void }> = (props) => {
   const footer = (
     <Button onClick={onSubmit}>
       <Save />
-      Update Settings
+      {t('Update Settings')}
     </Button>
   )
 
@@ -134,7 +133,7 @@ const Settings: Component<{ footer?: (children: any) => void }> = (props) => {
     <>
       <div class="my-2 flex flex-col gap-0.5">
         <Tabs
-          tabs={tabs.map((t) => settingTabs[t])}
+          tabs={tabs.map((tab) => t(settingTabs[tab]))}
           selected={tab}
           select={(id) => {
             setTab(id)
@@ -147,13 +146,12 @@ const Settings: Component<{ footer?: (children: any) => void }> = (props) => {
           </div>
         </Show>
         <label class="flex max-w-sm flex-col gap-1 text-sm">
-          <span>Language</span>
+          <span>{t('Language')}</span>
           <select
             class="rounded-md border border-[var(--bg-700)] bg-[var(--bg-800)] px-3 py-2"
-            value={language()}
+            value={appLanguage()}
             onChange={(ev) => {
               const next = ev.currentTarget.value as AppLanguage
-              setLanguage(next)
               setAppLanguage(next)
             }}
           >
@@ -182,9 +180,9 @@ const Settings: Component<{ footer?: (children: any) => void }> = (props) => {
 
           <div class={currentTab() === 'guest' ? tabClass : 'hidden'}>
             <div class="mb-4 mt-8 flex w-full flex-col items-center justify-center">
-              <div>This cannot be undone!</div>
+              <div>{t('This cannot be undone!')}</div>
               <Button schema="red" onClick={userStore.clearGuestState}>
-                <AlertTriangle /> Delete Guest State <AlertTriangle />
+                <AlertTriangle /> {t('Delete Guest State')} <AlertTriangle />
               </Button>
             </div>
           </div>
